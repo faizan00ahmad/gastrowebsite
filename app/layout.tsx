@@ -1,5 +1,14 @@
 ﻿import type { Metadata, Viewport } from "next";
-import { Noto_Nastaliq_Urdu, Rajdhani, Roboto } from "next/font/google";
+// Fonts are installed from npm (Fontsource) and bundled with the site, so the
+// build never downloads from Google Fonts and the site makes no font requests to Google.
+import "@fontsource/rajdhani/600.css";
+import "@fontsource/rajdhani/700.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+// Nastaliq script for the Urdu name and tagline.
+import "@fontsource/noto-nastaliq-urdu/500.css";
+import "@fontsource/noto-nastaliq-urdu/700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -7,29 +16,6 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { JsonLd } from "@/components/json-ld";
 import { organizationJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
-
-// Fonts are self-hosted at build time by next/font (no runtime request to Google).
-const rajdhani = Rajdhani({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  display: "swap",
-  variable: "--font-rajdhani",
-});
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-  variable: "--font-roboto",
-});
-
-// Nastaliq script for the Urdu name and tagline.
-const urdu = Noto_Nastaliq_Urdu({
-  subsets: ["arabic"],
-  weight: ["500", "700"],
-  display: "swap",
-  variable: "--font-urdu",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -71,7 +57,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${rajdhani.variable} ${roboto.variable} ${urdu.variable}`}>
+    <html lang="en">
       <body>
         <a href="#main" className="skip-link">
           Skip to content
