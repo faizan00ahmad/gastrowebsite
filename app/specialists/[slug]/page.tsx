@@ -22,8 +22,15 @@ export async function generateMetadata({ params }: Props) {
   const doc = findSpecialist(slug);
   if (!doc) return {};
   return buildMetadata({
-    title: `${doc.name}, ${doc.specialty}`,
-    description: `${doc.name} (${doc.roles[0]}) at Gastro Plus Medical Complex Multan. ${doc.bio[0].slice(0, 110)}…`,
+    title: `${doc.name}, ${doc.roles.join(" & ")} in Multan`,
+    description: [
+      doc.qualifications?.length ? `${doc.name} (${doc.qualifications.join(", ")})` : doc.name,
+      doc.title,
+      doc.roles.join(", "),
+      doc.positions.map((p) => `${p.role}, ${p.place}`).join("; "),
+    ]
+      .filter(Boolean)
+      .join(". ") + ".",
     path: `/specialists/${doc.slug}/`,
   });
 }
@@ -36,9 +43,9 @@ export default async function SpecialistPage({ params }: Props) {
   return (
     <>
       <PageHero
-        eyebrow={doc.specialty}
+        eyebrow={doc.title ?? doc.specialty}
         title={doc.name}
-        description={doc.roles.join(" · ")}
+        description={[doc.roles.join(" | "), (doc.qualifications ?? []).join(", ")].filter(Boolean).join(" · ")}
         crumbs={[
           { name: "Our Specialists", path: "/specialists/" },
           { name: doc.name, path: `/specialists/${doc.slug}/` },
@@ -50,29 +57,51 @@ export default async function SpecialistPage({ params }: Props) {
             <SmartImage src={`/images/${doc.slug}.jpg`} alt={doc.name} eager />
           </div>
           <div className="stack">
-            <div className="profile-role">
-              {doc.title && <span className="pill">{doc.title}</span>}
-              {doc.roles.map((r) => (
-                <span key={r} className="pill">
-                  {r}
-                </span>
-              ))}
+            <div>
+              <p className="doc-roles">{doc.roles.join(" | ")}</p>
+              <div className="profile-role">
+                {doc.title && <span className="pill">{doc.title}</span>}
+                {doc.qualifications?.map((q) => (
+                  <span key={q} className="pill">
+                    {q}
+                  </span>
+                ))}
+              </div>
             </div>
-            {doc.bio.map((p) => (
-              <p key={p.slice(0, 30)} style={{ fontSize: "1.05rem" }}>
-                {p}
-              </p>
-            ))}
+
+            <section>
+              <h2 className="doc-subhead">Current Positions</h2>
+              <ul className="positions">
+                {doc.positions.map((p) => (
+                  <li key={p.role + p.place}>
+                    <strong>{p.role}</strong>
+                    <span>{p.place}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
             {doc.qualifications && (
-              <>
-                <h3>Qualifications</h3>
+              <section>
+                <h2 className="doc-subhead">Qualifications</h2>
                 <ul className="card__points">
                   {doc.qualifications.map((q) => (
                     <li key={q}>{q}</li>
                   ))}
                 </ul>
-              </>
+              </section>
             )}
+
+            <section>
+              <h2 className="doc-subhead">
+                {doc.positions.some((p) => p.role === "Chief Executive Officer") ? "Message from the CEO" : "About"}
+              </h2>
+              {doc.bio.map((p) => (
+                <p key={p.slice(0, 30)} style={{ fontSize: "1.05rem" }}>
+                  {p}
+                </p>
+              ))}
+            </section>
             {doc.experience && (
               <p>
                 <strong>Experience:</strong> {doc.experience}

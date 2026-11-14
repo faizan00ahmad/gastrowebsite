@@ -9,6 +9,8 @@ npm install
 npm run dev
 ```
 
+Then open http://localhost:3030 (the dev server is pinned to port 3030 so it does not clash with other projects on 3000).
+
 ## Build
 
 ```bash

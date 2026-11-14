@@ -71,13 +71,17 @@ export default function AboutPage() {
                   {q}
                 </span>
               ))}
-              <span className="pill">{ceo.title}</span>
-              {ceo.roles.map((r) => (
-                <span key={r} className="pill">
-                  {r}
-                </span>
-              ))}
+              {ceo.title && <span className="pill">{ceo.title}</span>}
             </div>
+            <p className="doc-roles">{ceo.roles.join(" | ")}</p>
+            <ul className="positions" style={{ margin: "14px 0 18px" }}>
+              {ceo.positions.map((p) => (
+                <li key={p.role + p.place}>
+                  <strong>{p.role}</strong>
+                  <span>{p.place}</span>
+                </li>
+              ))}
+            </ul>
             <p style={{ fontSize: "1.05rem" }}>{ceo.bio[0]}</p>
             <Link href={`/specialists/${ceo.slug}/`} className="btn btn--primary">
               Read Full Profile

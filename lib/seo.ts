@@ -90,7 +90,15 @@ export function physicianJsonLd(specialist: Specialist) {
     name: specialist.name,
     url: absoluteUrl(`/specialists/${specialist.slug}`),
     medicalSpecialty: specialist.specialty,
-    description: specialist.bio[0],
+    jobTitle: [specialist.title, ...specialist.roles].join(", "),
+    description: `${specialist.roles.join(", ")}. ${specialist.positions.map((p) => `${p.role}, ${p.place}`).join(". ")}.`,
+    hasCredential: (specialist.qualifications ?? []).map((q) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: q,
+    })),
+    hospitalAffiliation: specialist.positions
+      .filter((p) => p.external)
+      .map((p) => ({ "@type": "Hospital", name: p.place })),
     worksFor: { "@id": `${site.url}/#organization` },
   };
 }

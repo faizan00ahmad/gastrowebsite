@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { departments } from "@/lib/content";
+import { bookingDepartments } from "@/lib/content";
 import { whatsappLink } from "@/lib/whatsapp";
 
 /**
@@ -11,7 +11,7 @@ import { whatsappLink } from "@/lib/whatsapp";
 export function BookingForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [department, setDepartment] = useState(departments[0].title);
+  const [department, setDepartment] = useState(bookingDepartments[0]);
   const [date, setDate] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -50,9 +50,9 @@ export function BookingForm() {
         <div className="field">
           <label htmlFor="b-dept">Department</label>
           <select id="b-dept" value={department} onChange={(e) => setDepartment(e.target.value)}>
-            {departments.map((d) => (
-              <option key={d.slug} value={d.title}>
-                {d.title}
+            {bookingDepartments.map((d) => (
+              <option key={d} value={d}>
+                {d}
               </option>
             ))}
           </select>

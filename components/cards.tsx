@@ -76,19 +76,29 @@ export function SpecialistCard({ doc }: { doc: Specialist }) {
       </div>
       <div className="media-card__body">
         <h3 style={{ marginBottom: 2 }}>{doc.name}</h3>
-        <p style={{ marginBottom: 10 }}>{doc.roles[0]}</p>
-        <div className="profile-role" style={{ margin: 0 }}>
-          {doc.qualifications?.map((q) => (
-            <span key={q} className="pill">
-              {q}
-            </span>
-          ))}
-          <span className="pill">{doc.title}</span>
-        </div>
+        <p style={{ marginBottom: 10 }}>{doc.roles.join(" | ")}</p>
+        {(doc.title || doc.qualifications?.length) && (
+          <div className="profile-role" style={{ margin: 0 }}>
+            {doc.title && <span className="pill">{doc.title}</span>}
+            {doc.qualifications?.map((q) => (
+              <span key={q} className="pill">
+                {q}
+              </span>
+            ))}
+          </div>
+        )}
         {/* Blueprint Section 10: photo, name, qualification, speciality, experience, Book Appointment */}
         <dl className="doc-facts">
           <dt>Speciality</dt>
           <dd>{doc.specialty}</dd>
+          <dt>Position</dt>
+          <dd>
+            {doc.positions.map((p) => (
+              <span key={p.role + p.place} style={{ display: "block" }}>
+                {p.role}, {p.place}
+              </span>
+            ))}
+          </dd>
           {doc.experience && (
             <>
               <dt>Experience</dt>

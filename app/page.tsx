@@ -72,10 +72,14 @@ export default function HomePage() {
             <h2>A Message from Our CEO</h2>
             <p style={{ fontSize: "1.08rem" }}>{ceo.bio[0]}</p>
             <div className="signature">
+              <span className="signature__roles">{ceo.roles.join(" | ")}</span>
+              {ceo.title && <span>{ceo.title}</span>}
               <strong>{ceo.name}</strong>
-              <span>{ceo.title}</span>
-              {ceo.roles.map((r) => (
-                <span key={r}>{r}</span>
+              {ceo.qualifications && <span>{ceo.qualifications.join(", ")}</span>}
+              {ceo.positions.map((p) => (
+                <span key={p.role + p.place}>
+                  {p.role === "Chief Executive Officer" ? "CEO" : p.role} {p.place}
+                </span>
               ))}
             </div>
             <Link href={`/specialists/${ceo.slug}/`} className="btn btn--primary" style={{ marginTop: 22 }}>
@@ -142,7 +146,7 @@ export default function HomePage() {
       {/* Section 10: meet our specialists */}
       <Section className="section--alt">
         <SectionHeading eyebrow="Meet Our Specialists" title="Our Healthcare Experts" />
-        <div className="grid grid--3" style={{ maxWidth: 380, margin: "0 auto" }}>
+        <div className="grid grid--3" style={{ maxWidth: specialists.length * 400, margin: "0 auto" }}>
           {specialists.map((doc) => (
             <SpecialistCard key={doc.slug} doc={doc} />
           ))}

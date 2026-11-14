@@ -25,13 +25,23 @@ export interface Procedure {
   preparation: string[];
 }
 
+export interface Position {
+  role: string;
+  place: string;
+  /** True for other hospitals the doctor also works at (used for Physician schema). */
+  external?: boolean;
+}
+
 export interface Specialist {
   slug: string;
   name: string;
   /** Academic / professional title, e.g. "Assistant Professor". */
-  title: string;
+  title?: string;
+  /** Clinical roles, shown as "Gastroenterologist | Hepatologist | ...". */
   roles: string[];
   specialty: string;
+  /** Current appointments, most relevant first. */
+  positions: Position[];
   bio: string[];
   /** Optional — only render when verified. */
   qualifications?: string[];
@@ -307,14 +317,37 @@ export const specialists: Specialist[] = [
     slug: "dr-umair-khan-sherwani",
     name: "Dr. Umair Khan Sherwani",
     title: "Assistant Professor",
-    roles: ["Consultant Gastroenterologist & Hepatologist", "Chief Executive Officer"],
-    specialty: "Gastroenterology & Hepatology",
-    // From the embroidery on the doctor's uniform in the supplied photo. TODO: confirm full degree list.
-    qualifications: ["FCPS (Gastroenterology)"],
+    roles: ["Gastroenterologist", "Hepatologist", "Interventional Endoscopist"],
+    specialty: "Gastroenterology, Hepatology & Interventional Endoscopy",
+    qualifications: ["MBBS (KEMU)", "FCPS Gastroenterology"],
+    positions: [
+      { role: "Chief Executive Officer", place: "Gastro Plus Medical Complex Multan" },
+      { role: "Head of Gastroenterology Department", place: "Ibn e Sina Hospital Multan", external: true },
+      { role: "Consultant Gastroenterologist", place: "Mukhtar A Sheikh Hospital Multan", external: true },
+    ],
     bio: [
       "At Gastro Plus Medical Complex Multan, our mission is to provide advanced, ethical, and compassionate healthcare with a strong focus on digestive and liver diseases. We believe every patient deserves expert care, accurate diagnosis, and respectful treatment.",
     ],
   },
+  {
+    slug: "dr-hunain",
+    name: "Dr. Hunain",
+    roles: ["Dental Surgeon"],
+    specialty: "Dentistry & Oral Surgery",
+    positions: [{ role: "Dental Surgeon", place: "Gastro Plus Medical Complex Multan" }],
+    // TODO: add full name, qualifications, experience and a photo (public/images/dr-hunain.jpg).
+    bio: ["Dental Surgeon at Gastro Plus Medical Complex Multan, providing dental and oral care."],
+  },
+];
+
+/**
+ * Choices in the booking form's Department dropdown: the departments above,
+ * plus OPD and services that are not separate department pages.
+ */
+export const bookingDepartments: string[] = [
+  "OPD (Outpatient Consultation)",
+  ...departments.map((d) => d.title),
+  "Dental Surgery",
 ];
 
 /* ------------------------------------------------------------------ */

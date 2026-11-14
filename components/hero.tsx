@@ -6,6 +6,7 @@ import { whatsappLink } from "@/lib/whatsapp";
 
 /** Trust strip, exactly as listed in the blueprint (Section 3). */
 const trustStrip: { label: string; icon: IconName }[] = [
+  { label: "OPD Services", icon: "clock" },
   { label: "Expert Consultants", icon: "user" },
   { label: "Advanced Endoscopy Suite", icon: "scan" },
   { label: "Diagnostic Laboratory", icon: "flask" },
@@ -56,13 +57,14 @@ export function Hero() {
             <div className="hero__media-frame">
               <SmartImage
                 src="/images/dr-umair-khan-sherwani.jpg"
-                alt="Dr. Umair Khan Sherwani, Consultant Gastroenterologist and Hepatologist"
+                alt="Dr. Umair Khan Sherwani, Gastroenterologist, Hepatologist and Interventional Endoscopist"
                 eager
               />
             </div>
             <div className="hero__name-tag glass">
               <strong>Dr. Umair Khan Sherwani</strong>
-              <span>Consultant Gastroenterologist &amp; Hepatologist</span>
+              <span>Gastroenterologist | Hepatologist | Interventional Endoscopist</span>
+              <span className="hero__name-tag-sub">MBBS (KEMU), FCPS Gastroenterology</span>
             </div>
           </div>
         </div>
