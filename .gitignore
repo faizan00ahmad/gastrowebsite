@@ -5,3 +5,7 @@ next-env.d.ts
 *.tsbuildinfo
 .env*.local
 .DS_Store
+
+# Standalone HTML: images are embedded in the files; the folder and zip are copies
+html-version/images/
+gastro-plus-html.zip

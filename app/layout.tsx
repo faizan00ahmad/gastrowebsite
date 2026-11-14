@@ -6,6 +6,11 @@ import "@fontsource/rajdhani/700.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "@fontsource/public-sans/400.css";
+import "@fontsource/public-sans/500.css";
+import "@fontsource/public-sans/600.css";
+import "@fontsource/public-sans/700.css";
+import "@fontsource/inter/500.css";
 // Nastaliq script for the Urdu name and tagline.
 import "@fontsource/noto-nastaliq-urdu/500.css";
 import "@fontsource/noto-nastaliq-urdu/700.css";
@@ -50,7 +55,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#7a1116",
+  themeColor: "#801215",
   width: "device-width",
   initialScale: 1,
 };

@@ -4,18 +4,15 @@ import { SmartImage } from "./smart-image";
 import type { Article, Department, Procedure, Specialist, Testimonial } from "@/lib/content";
 
 /**
- * Photo area with a dark gradient overlay and the title set on it.
+ * Cyan-bordered photo tile (reference "Our Specialties" style); the title sits below it.
  * Shows the brand pattern and a watermark icon until a photo is supplied.
  */
-function MediaHeader({ title, icon, image, kicker }: { title: string; icon: IconName; image?: string; kicker?: string }) {
+function MediaHeader({ icon, image, kicker }: { icon: IconName; image?: string; kicker?: string }) {
   return (
     <div className="media-card__media">
       <Icon name={icon} size={140} strokeWidth={0.9} />
       {image && <SmartImage src={image} alt="" fallback="none" />}
       {kicker && <span className="media-card__kicker">{kicker}</span>}
-      <div className="media-card__label">
-        <h3>{title}</h3>
-      </div>
     </div>
   );
 }
@@ -24,8 +21,9 @@ function MediaHeader({ title, icon, image, kicker }: { title: string; icon: Icon
 export function DepartmentCard({ dept }: { dept: Department }) {
   return (
     <Link href={`/departments/${dept.slug}/`} className="glass glass--interactive media-card">
-      <MediaHeader title={dept.title} icon={dept.icon} image={dept.image} />
+      <MediaHeader icon={dept.icon} image={dept.image} />
       <div className="media-card__body">
+        <h3>{dept.title}</h3>
         <p>{dept.summary}</p>
         <ul className="card__points">
           {dept.points.slice(0, 2).map((p) => (
@@ -44,8 +42,9 @@ export function DepartmentCard({ dept }: { dept: Department }) {
 export function ProcedureCard({ proc }: { proc: Procedure }) {
   return (
     <Link href={`/procedures/${proc.slug}/`} className="glass glass--interactive media-card">
-      <MediaHeader title={proc.title} icon={proc.icon} image={proc.image} />
+      <MediaHeader icon={proc.icon} image={proc.image} />
       <div className="media-card__body">
+        <h3>{proc.title}</h3>
         <p>{proc.summary}</p>
         <p className="media-card__meta">Preparation, what to expect and booking</p>
       </div>
@@ -57,8 +56,9 @@ export function ArticleCard({ article }: { article: Article }) {
   const date = new Date(article.published).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   return (
     <Link href={`/blog/${article.slug}/`} className="glass glass--interactive media-card">
-      <MediaHeader title={article.title} icon="book" image={article.image} kicker={article.category} />
+      <MediaHeader icon="book" image={article.image} kicker={article.category} />
       <div className="media-card__body">
+        <h3>{article.title}</h3>
         <p>{article.summary}</p>
         <p className="media-card__meta">
           <time dateTime={article.published}>{date}</time> · {article.readingMinutes} min read

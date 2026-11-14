@@ -68,6 +68,7 @@ export default function HomePage() {
             <SmartImage src={`/images/${ceo.slug}.jpg`} alt={ceo.name} />
           </div>
           <div>
+            <span className="eyebrow">Message from the CEO</span>
             <h2>A Message from Our CEO</h2>
             <p style={{ fontSize: "1.08rem" }}>{ceo.bio[0]}</p>
             <div className="signature">
@@ -86,7 +87,7 @@ export default function HomePage() {
 
       {/* Section 6: why choose Gastro Plus (6 premium cards) */}
       <Section className="section--alt">
-        <SectionHeading title="Why Patients Choose Gastro Plus" />
+        <SectionHeading eyebrow="Introduction" title="Why Patients Choose Gastro Plus" />
         <ul className="icon-grid">
           {whyChoose.map((item) => (
             <li key={item.title} className="icon-item">
@@ -101,8 +102,8 @@ export default function HomePage() {
       </Section>
 
       {/* Section 7: departments (six cards, each with Learn More) */}
-      <Section>
-        <SectionHeading title="Comprehensive Healthcare Services Under One Roof" />
+      <Section className="section--maroon">
+        <SectionHeading eyebrow="What We Offer" title="Comprehensive Healthcare Services Under One Roof" />
         <div className="grid grid--3">
           {departments.map((d) => (
             <DepartmentCard key={d.slug} dept={d} />
@@ -112,7 +113,7 @@ export default function HomePage() {
 
       {/* Section 8: procedures of excellence (large cards + Explore Procedures) */}
       <Section className="section--alt">
-        <SectionHeading title="Advanced Diagnostic & Therapeutic Procedures" />
+        <SectionHeading eyebrow="Procedures of Excellence" title="Advanced Diagnostic & Therapeutic Procedures" />
         <div className="grid grid--3">
           {procedures.map((p) => (
             <ProcedureCard key={p.slug} proc={p} />
@@ -126,8 +127,8 @@ export default function HomePage() {
       </Section>
 
       {/* Section 9: patient journey */}
-      <Section>
-        <SectionHeading title="Your Journey to Better Health" />
+      <Section className="section--maroon">
+        <SectionHeading eyebrow="Patient Journey" title="Your Journey to Better Health" />
         <ol className="journey">
           {journey.map((step, i) => (
             <li key={step.title} className="glass journey__step">
@@ -140,7 +141,7 @@ export default function HomePage() {
 
       {/* Section 10: meet our specialists */}
       <Section className="section--alt">
-        <SectionHeading title="Our Healthcare Experts" />
+        <SectionHeading eyebrow="Meet Our Specialists" title="Our Healthcare Experts" />
         <div className="grid grid--3" style={{ maxWidth: 380, margin: "0 auto" }}>
           {specialists.map((doc) => (
             <SpecialistCard key={doc.slug} doc={doc} />
@@ -151,7 +152,7 @@ export default function HomePage() {
       {/* Section 12: patient testimonials (blueprint has no Section 11) */}
       <section className="section band-dark">
         <div className="container">
-          <SectionHeading title="What Our Patients Say" />
+          <SectionHeading eyebrow="Testimonials" title="What Our Patients Say" />
           <div className="grid grid--3">
             {testimonials.map((t) => (
               <TestimonialCard key={t.quote} t={t} />
@@ -167,7 +168,7 @@ export default function HomePage() {
 
       {/* Section 13: health education center */}
       <Section>
-        <SectionHeading title="Health Awareness & Patient Education" />
+        <SectionHeading eyebrow="Keeping You Well" title="Health Awareness & Patient Education" />
         <div className="grid grid--3">
           {articles.map((a) => (
             <ArticleCard key={a.slug} article={a} />
@@ -202,6 +203,7 @@ export default function HomePage() {
             <MapEmbed />
           </div>
           <div className="stack">
+            <span className="eyebrow">Find Us</span>
             <h2>Visit Gastro Plus Medical Complex Multan</h2>
             <ul className="info-list">
               <li className="info-item">
@@ -259,6 +261,7 @@ export default function HomePage() {
       <Section className="section--alt">
         <div className="split" style={{ alignItems: "start" }}>
           <div>
+            <span className="eyebrow">General Query</span>
             <h2>Frequently Asked Questions</h2>
             <p>Can&apos;t find your answer? Call {site.phones[0].display} and our front desk will help.</p>
           </div>
@@ -279,9 +282,10 @@ export default function HomePage() {
         <JsonLd data={faqJsonLd(faqs)} />
       </Section>
 
-      <Section id="book">
+      <Section id="book" className="section--maroon">
         <div className="split" style={{ alignItems: "start" }}>
           <div>
+            <span className="eyebrow">Online Booking</span>
             <h2>Online Appointment Booking</h2>
             <p>Fill in the form and it opens WhatsApp with your details. Our front desk replies with a time.</p>
           </div>
@@ -290,7 +294,7 @@ export default function HomePage() {
       </Section>
 
       <Section id="gallery" className="section--alt">
-        <SectionHeading title="Gallery" />
+        <SectionHeading eyebrow="From Our Facebook Page" title="Gallery" />
         <Gallery images={galleryImages} facebookPosts={facebookGalleryPosts} />
       </Section>
     </>

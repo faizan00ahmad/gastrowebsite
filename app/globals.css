@@ -8,37 +8,37 @@
 
 :root {
   /* Logo palette */
-  --brand-950: #2a0709;
-  --brand-900: #3a0a0d;
-  --brand-800: #550e13;
-  --brand-700: #7a1116; /* logo maroon */
-  --brand-600: #941a20;
-  --brand-500: #b02a30;
-  --brand-300: #e3a9ac;
-  --brand-100: #fbeef0;
-  --brand-50: #fdf7f7;
+  --brand-950: #2a0607; /* deepest maroon (patterns) */
+  --brand-900: #141414; /* black: headings, top bar, footer, dark nav block */
+  --brand-800: #5e0d10; /* deep maroon */
+  --brand-700: #801215; /* logo maroon */
+  --brand-600: #801215; /* logo maroon: links and small text */
+  --brand-500: #801215; /* logo maroon: accents, borders, icons */
+  --brand-300: #e3a9ac; /* light maroon */
+  --brand-100: #e8e8ea; /* light grey: pills, tile backdrop */
+  --brand-50: #f4f4f5; /* lightest grey */
 
-  --grey-700: #5d6166;
-  --grey-500: #8f9296; /* logo hands */
-  --grey-300: #cfd1d4;
-  --grey-100: #f2f3f4;
+  --grey-700: #54595f;
+  --grey-500: #999999;
+  --grey-300: #d4d4d8;
+  --grey-100: #f9fafa;
 
   --accent-wa: #1faa59;
 
-  --ink: #1f1416;
-  --ink-soft: #4b4143;
-  --muted: #7a6f71;
-  --line: #ece4e5;
+  --ink: #141414;
+  --ink-soft: #666666;
+  --muted: #7a7a7a;
+  --line: #e2e2e4;
   --surface: #ffffff;
-  --surface-alt: #faf5f5;
+  --surface-alt: #e4e4e6; /* grey sections */
 
   --glass-top: rgba(255, 255, 255, 0.86);
   --glass-bottom: rgba(255, 255, 255, 0.62);
   --glass-border: rgba(255, 255, 255, 0.9);
   --glass-blur: saturate(180%) blur(20px);
-  --shadow-sm: 0 2px 10px rgba(58, 10, 13, 0.06);
-  --shadow-md: 0 14px 36px -16px rgba(58, 10, 13, 0.28);
-  --shadow-lg: 0 30px 60px -24px rgba(58, 10, 13, 0.4);
+  --shadow-sm: 0 2px 10px rgba(20, 20, 20, 0.06);
+  --shadow-md: 0 14px 36px -16px rgba(20, 20, 20, 0.28);
+  --shadow-lg: 0 30px 60px -24px rgba(20, 20, 20, 0.4);
 
   --radius-xl: 28px;
   --radius-lg: 20px;
@@ -51,10 +51,19 @@
   --section-y: clamp(56px, 8vw, 104px);
 
   --font-heading: "Rajdhani", "Segoe UI", sans-serif;
-  --font-body: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-nav: "Inter", Arial, Helvetica, sans-serif;
+  --font-button: "Roboto", sans-serif;
+  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --focus: 0 0 0 3px rgba(176, 42, 48, 0.45);
+  --focus: 0 0 0 3px rgba(128, 18, 21, 0.4);
+
+  /* Blend: white ~40% / grey ~30% / black ~10% / logo maroon ~20% */
+  --maroon: #801215;
+  --maroon-dark: #6b0f12;
+  --grad: linear-gradient(to right, var(--maroon), var(--maroon-dark));
+  --band: #801215;     /* maroon bands */
+  --on-dark: #e8b7b9;  /* accent text on maroon bands and the black footer */
 
   color-scheme: light;
 }
@@ -207,7 +216,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn--primary {
   color: #fff;
   background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
-  box-shadow: 0 10px 22px -10px rgba(122, 17, 22, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 22px -10px rgba(20, 20, 20, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .btn--primary:hover { transform: translateY(-2px); }
 
@@ -391,7 +400,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--line);
-  box-shadow: 0 8px 24px -18px rgba(58, 10, 13, 0.35);
+  box-shadow: 0 8px 24px -18px rgba(20, 20, 20, 0.35);
 }
 .header-nav__inner {
   display: flex;
@@ -475,7 +484,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(900px 500px at 85% 20%, rgba(227, 169, 172, 0.45), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(128, 18, 21, 0.45), transparent 60%),
     linear-gradient(115deg, #fff 0%, var(--brand-50) 45%, var(--brand-100) 100%);
 }
 .hero__banner::after {
@@ -485,7 +494,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   top: -30%;
   width: 60%;
   height: 160%;
-  background: linear-gradient(160deg, rgba(122, 17, 22, 0.08), rgba(122, 17, 22, 0.02));
+  background: linear-gradient(160deg, rgba(20, 20, 20, 0.08), rgba(20, 20, 20, 0.02));
   transform: skewX(-12deg);
   pointer-events: none;
 }
@@ -627,7 +636,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-radius: 14px;
   color: #fff;
   background: linear-gradient(150deg, var(--brand-500), var(--brand-800));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 20px -10px rgba(122, 17, 22, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 20px -10px rgba(20, 20, 20, 0.7);
 }
 .tile-icon--soft {
   color: var(--brand-700);
@@ -810,7 +819,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .band-dark {
   position: relative;
   background:
-    radial-gradient(800px 400px at 10% 0%, rgba(176, 42, 48, 0.35), transparent 60%),
+    radial-gradient(800px 400px at 10% 0%, rgba(128, 18, 21, 0.35), transparent 60%),
     linear-gradient(160deg, var(--brand-900), var(--brand-950));
   color: #fff;
 }
@@ -860,7 +869,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-radius: var(--radius-xl);
   color: #fff;
   background:
-    radial-gradient(circle at 85% 0%, rgba(227, 169, 172, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(128, 18, 21, 0.35), transparent 45%),
     linear-gradient(135deg, var(--brand-700), var(--brand-950));
   box-shadow: var(--shadow-lg);
   display: grid;
@@ -1030,7 +1039,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: #000;
   overflow: visible;
 }
-.lightbox::backdrop { background: rgba(20, 4, 6, 0.85); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lightbox::backdrop { background: rgba(10, 10, 10, 0.85); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .lightbox figure { margin: 0; }
 .lightbox img { width: 100%; max-height: 82vh; object-fit: contain; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 .lightbox figcaption { padding: 12px 18px; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; }
@@ -1060,8 +1069,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   --pattern-brand:
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0) 0 0 / 16px 16px,
     linear-gradient(140deg, var(--brand-600) 0%, var(--brand-900) 70%, var(--brand-950) 100%);
-  --overlay-bottom: linear-gradient(180deg, rgba(42, 7, 9, 0) 30%, rgba(42, 7, 9, 0.55) 62%, rgba(42, 7, 9, 0.92) 100%);
-  --overlay-side: linear-gradient(90deg, rgba(42, 7, 9, 0.95) 0%, rgba(58, 10, 13, 0.85) 42%, rgba(122, 17, 22, 0.35) 100%);
+  --overlay-bottom: linear-gradient(180deg, rgba(10, 10, 10, 0) 30%, rgba(10, 10, 10, 0.55) 62%, rgba(10, 10, 10, 0.92) 100%);
+  --overlay-side: linear-gradient(90deg, rgba(10, 10, 10, 0.95) 0%, rgba(20, 20, 20, 0.85) 42%, rgba(20, 20, 20, 0.35) 100%);
 }
 
 /* ---------- Page banner (inner pages): photo + dark overlay ---------- */
@@ -1566,3 +1575,219 @@ a.media-card:hover .media-card__label h3 { text-decoration: underline; text-unde
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   Reference theme (mashospital.org): white + blue
+   Component styling matched to the reference site. Kept as one block so the
+   look can be adjusted in one place; it overrides the base rules above.
+   ========================================================================== */
+
+body { font-size: 15px; color: var(--ink-soft); }
+h2 { font-size: clamp(1.9rem, 3.4vw, 2.625rem); letter-spacing: -1.2px; }
+h3 { color: var(--brand-900); }
+.eyebrow { color: var(--brand-500); font-size: 0.92rem; font-weight: 500; letter-spacing: 0; }
+.link-arrow { color: var(--brand-600); }
+
+/* Buttons: cyan gradient, 5px radius, Roboto 14px with 1px tracking */
+.btn {
+  min-height: 44px;
+  padding: 0 25px;
+  border-radius: 5px;
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.btn--primary {
+  background: var(--grad);
+  box-shadow: 0 10px 20px -12px rgba(128, 18, 21, 0.9);
+}
+.btn--glass {
+  color: var(--brand-900);
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 20px -10px rgba(20, 20, 20, 0.25);
+}
+.btn--glass:hover { background: #fff; color: var(--brand-600); }
+
+/* Header */
+.topbar { background: var(--brand-900); }
+.brand__name { color: var(--brand-900); font-size: 1.25rem; }
+.brand__sub { color: var(--grey-700); }
+.brand__urdu { color: var(--brand-500); }
+.header-contact__icon { color: var(--brand-900); }
+.header-contact small { color: #666; font-size: 0.8rem; }
+.header-contact a { color: var(--brand-500); font-size: 1.15rem; letter-spacing: -0.5px; }
+.header-contact a:hover { color: var(--brand-800); }
+.header-nav { background: rgba(255, 255, 255, 0.92); }
+.nav-links a {
+  padding: 0 10px;
+  font-family: var(--font-nav);
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+.nav-links a:hover { color: var(--brand-500); }
+.nav-links a[aria-current="page"] { color: var(--brand-500); border-bottom-color: var(--brand-500); font-weight: 500; }
+.nav-block { font-size: 0.9rem; letter-spacing: 0.05em; }
+.nav-block--brand { background: var(--grad); }
+.nav-block--wa { gap: 8px; background: var(--brand-900); }
+.menu-toggle { color: var(--brand-900); }
+.mobile-panel a[aria-current="page"] { color: var(--brand-500); }
+
+/* Hero */
+.hero__banner {
+  background:
+    radial-gradient(900px 500px at 85% 20%, rgba(128, 18, 21, 0.45), transparent 60%),
+    linear-gradient(110deg, #fff 0%, var(--brand-50) 45%, var(--brand-100) 100%);
+}
+.hero__banner::after { background: linear-gradient(160deg, rgba(20, 20, 20, 0.07), rgba(20, 20, 20, 0.02)); }
+.hero__copy h1 { color: var(--brand-900); }
+.hero__copy h1 span { color: var(--brand-800); }
+.hero__urdu { font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--brand-800); }
+.hero-chip { color: var(--brand-900); }
+.hero-chip svg { color: var(--brand-500); }
+.hero__name-tag strong { color: var(--brand-900); }
+.hero__strip { background: #fff; color: var(--brand-900); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.hero__strip-inner svg { color: var(--brand-500); }
+.info-box h2 { color: var(--brand-900); }
+.info-box--brand { background: var(--grad); }
+
+/* Icon grid (reference "stats" row): grey line icons, cyan titles */
+.icon-item__icon { color: var(--grey-500); }
+.icon-item h3 { color: var(--brand-500); font-size: 1.35rem; }
+
+/* Tiles (reference "Our Specialties" / news cards): cyan-bordered image, title below */
+.media-card,
+.media-card.glass {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.media-card::before { display: none; }
+.media-card.glass--interactive:hover { transform: translateY(-5px); box-shadow: none; }
+.media-card__media {
+  aspect-ratio: 4 / 3;
+  border: 3px solid var(--brand-500);
+  border-radius: 4px;
+  transition: box-shadow 0.4s var(--ease);
+}
+.media-card:hover .media-card__media { box-shadow: var(--shadow-md); }
+.media-card__media::after { display: none; }
+.media-card__body { padding: 14px 2px 0; }
+.media-card__body h3 { margin-bottom: 6px; font-size: 1.2rem; color: var(--brand-900); }
+a.media-card:hover .media-card__body h3 { color: var(--brand-600); }
+.media-card__kicker { color: var(--brand-800); }
+
+/* Small accents */
+.journey__num,
+.checklist svg,
+.values li::before { background: var(--grad); }
+.pill { background: var(--brand-100); color: var(--brand-800); }
+.faq__num { color: var(--brand-900); background: #fff; border: 1px solid var(--line); border-radius: 2px; }
+.faq summary { font-family: var(--font-heading); font-size: 1.08rem; font-weight: 700; color: var(--brand-900); }
+.faq details[open] .faq__num { background: var(--brand-500); border-color: var(--brand-500); color: #fff; }
+.faq details[open] summary { color: var(--brand-500); }
+.proc-list strong { color: var(--brand-900); }
+.stars { color: #f5b301; }
+
+/* Navy bands (CTA + testimonials) */
+.band-dark {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0) 0 0 / 20px 20px,
+    var(--brand-900);
+}
+.band-dark .eyebrow,
+.cta-row p { color: var(--brand-500); }
+.cta-row h2 { font-size: clamp(1.4rem, 2.4vw, 1.75rem); letter-spacing: 0; }
+.testimonial { border-radius: 4px; border: 1px solid var(--line); box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.6); }
+.testimonial p { font-style: italic; }
+
+/* Inner page banner: light overlay over a photo, navy title, grey breadcrumbs */
+.page-banner {
+  color: var(--ink);
+  background: #eef3f8;
+  clip-path: none;
+  padding-block: clamp(70px, 10vw, 130px);
+}
+.page-banner__pattern { background: linear-gradient(110deg, var(--brand-50), #dbeef8); }
+.page-banner::before {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.88) 42%, rgba(255, 255, 255, 0.2) 100%);
+}
+.page-banner::after { display: none; }
+.page-banner h1 { color: var(--brand-900); }
+.page-banner p { color: var(--ink-soft); }
+.page-banner .eyebrow { background: var(--brand-100); border: 0; color: var(--brand-800); }
+.breadcrumbs { color: var(--grey-700); }
+.breadcrumbs a:hover { color: var(--brand-500); }
+.breadcrumbs [aria-current="page"] { color: var(--grey-700); }
+
+/* Footer */
+.site-footer {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0) 0 0 / 18px 18px,
+    var(--brand-900);
+}
+.footer-contact__icon { background: var(--grad); }
+.footer-links a::before { color: var(--brand-500); }
+.timings__row span:first-child,
+.timings__note strong { color: var(--brand-500); }
+.footer-social a { color: var(--brand-900); }
+@media (max-width: 640px) { .nav-block__label { display: none; } }
+
+/* ==========================================================================
+   Blend theme: white ~40% / grey ~30% / black ~10% / logo maroon ~20%
+   White: main sections and cards. Grey: alternate sections and the hero.
+   Black: top bar, footer, headings. Maroon (#801215, from the logo):
+   departments, patient journey, testimonials, booking banner and online
+   booking bands, plus buttons, borders and icons.
+   ========================================================================== */
+
+/* Grey hero */
+.hero__banner {
+  background:
+    radial-gradient(900px 500px at 85% 20%, rgba(128, 18, 21, 0.07), transparent 60%),
+    linear-gradient(110deg, #ececee 0%, #e4e4e6 55%, #dadadd 100%);
+}
+.hero__banner::after { background: linear-gradient(160deg, rgba(20, 20, 20, 0.05), rgba(20, 20, 20, 0.01)); }
+.hero__urdu { color: var(--maroon); }
+
+/* Maroon bands */
+.band-dark,
+.section--maroon {
+  color: #fff;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0) 0 0 / 20px 20px,
+    var(--band);
+}
+.band-dark .eyebrow,
+.section--maroon .eyebrow,
+.cta-row p { color: var(--on-dark); }
+.section--maroon h2,
+.section--maroon > .container > .split > div > p,
+.section--maroon .section-head p { color: #fff; }
+
+/* Department tiles on maroon: white frame and text */
+.section--maroon .media-card__media { border-color: #fff; }
+.section--maroon .media-card__body h3,
+.section--maroon .media-card__body p,
+.section--maroon .card__points li { color: #fff; }
+.section--maroon a.media-card:hover .media-card__body h3,
+.section--maroon .media-card__more,
+.section--maroon .link-arrow { color: var(--on-dark); }
+.section--maroon .card__points li::before { background: var(--on-dark); }
+
+/* Buttons on maroon: white with logo-maroon text so they stand out */
+.band-dark .btn--primary,
+.section--maroon > .container > .split > div .btn--primary,
+.cta-banner .btn--primary { background: #fff; color: var(--maroon); box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.6); }
+
+/* Black footer: light-maroon accents for contrast */
+.footer-links a::before,
+.timings__row span:first-child,
+.timings__note strong { color: var(--on-dark); }
+
+/* Testimonials band link */
+.band-dark .link-arrow { color: var(--on-dark) !important; }

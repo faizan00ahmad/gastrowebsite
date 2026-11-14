@@ -135,10 +135,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="nav-blocks">
-            <Link href="/contact/#book" className="nav-block nav-block--brand">
-              <Icon name="calendar" size={18} />
-              Book Appointment
-            </Link>
             <a
               href={whatsappLink(BOOKING_MESSAGE)}
               target="_blank"
@@ -146,8 +142,13 @@ export function SiteHeader() {
               className="nav-block nav-block--wa"
               aria-label="Chat on WhatsApp"
             >
-              <WhatsAppGlyph size={22} />
+              <WhatsAppGlyph size={20} />
+              <span className="nav-block__label">WhatsApp</span>
             </a>
+            <Link href="/contact/#book" className="nav-block nav-block--brand">
+              <Icon name="calendar" size={18} />
+              Book Appointment
+            </Link>
           </div>
         </div>
 
