@@ -4,7 +4,7 @@ import { PageHero, Section } from "@/components/primitives";
 import { AsideBooking, AsideLinks } from "@/components/aside";
 import { Icon } from "@/components/icons";
 import { buildMetadata } from "@/lib/seo";
-import { departments, procedures } from "@/lib/content";
+import { departments, findDepartment, findProcedure, findSpecialist } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -16,23 +16,23 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const dept = departments.find((d) => d.slug === slug);
+  const dept = findDepartment(slug);
   if (!dept) return {};
   return buildMetadata({
     title: `${dept.title} in Multan`,
-    description: `${dept.title} at Gastro Plus Medical Complex Multan. ${dept.summary}`,
+    description: `${dept.title} at Gastro Plus Medical Complex Multan. ${dept.overview}`,
     path: `/departments/${dept.slug}/`,
   });
 }
 
 export default async function DepartmentPage({ params }: Props) {
   const { slug } = await params;
-  const dept = departments.find((d) => d.slug === slug);
+  const dept = findDepartment(slug);
   if (!dept) notFound();
 
   const current = `/departments/${dept.slug}/`;
-  // The endoscopy suite links straight to the procedures it performs.
-  const related = dept.slug === "endoscopy-suite" || dept.slug === "gastroenterology" ? procedures : [];
+  const procs = (dept.procedures ?? []).map(findProcedure).filter((p) => p !== undefined);
+  const docs = (dept.specialists ?? []).map(findSpecialist).filter((s) => s !== undefined);
 
   return (
     <>
@@ -49,37 +49,63 @@ export default async function DepartmentPage({ params }: Props) {
       <Section>
         <div className="with-aside">
           <div>
-            <h2>What we offer</h2>
-            <p className="detail-lead">
-              {dept.summary} Our {dept.title.toLowerCase()} team works alongside our specialists, so your care is
-              coordinated from consultation to follow-up.
-            </p>
-            <section className="glass detail-card" style={{ marginTop: 24 }}>
-              <h2>
-                <Icon name={dept.icon} size={22} /> Services
-              </h2>
-              <ul className="ticks">
-                {dept.points.map((p) => (
-                  <li key={p}>
-                    <Icon name="check" size={18} />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <p className="detail-lead">{dept.overview}</p>
 
-            {related.length > 0 && (
-              <section style={{ marginTop: 32 }}>
+            <div className="detail-grid">
+              {dept.sections.map((s) => (
+                <section key={s.heading} className="glass detail-card">
+                  <h2>
+                    <Icon name={dept.icon} size={22} /> {s.heading}
+                  </h2>
+                  <ul className="ticks">
+                    {s.points.map((p) => (
+                      <li key={p}>
+                        <Icon name="check" size={18} />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+
+            {dept.note && (
+              <div className="notice" style={{ marginTop: 24 }}>
+                {dept.note}
+              </div>
+            )}
+
+            {procs.length > 0 && (
+              <section style={{ marginTop: 36 }}>
                 <h2>Related procedures</h2>
                 <ul className="ticks">
-                  {related.map((p) => (
+                  {procs.map((p) => (
                     <li key={p.slug}>
                       <Icon name="arrow" size={18} />
                       <span>
                         <Link href={`/procedures/${p.slug}/`} className="link-arrow">
                           {p.title}
                         </Link>{" "}
-                        - {p.summary}
+                        – {p.summary}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {docs.length > 0 && (
+              <section style={{ marginTop: 36 }}>
+                <h2>Specialists</h2>
+                <ul className="ticks">
+                  {docs.map((d) => (
+                    <li key={d.slug}>
+                      <Icon name="user" size={18} />
+                      <span>
+                        <Link href={`/specialists/${d.slug}/`} className="link-arrow">
+                          {d.name}
+                        </Link>{" "}
+                        – {d.roles.join(", ")}
                       </span>
                     </li>
                   ))}
@@ -89,7 +115,7 @@ export default async function DepartmentPage({ params }: Props) {
           </div>
 
           <aside className="aside">
-            <AsideBooking />
+            {dept.bookable && <AsideBooking department={dept.slug} />}
             <AsideLinks
               title="All Departments"
               current={current}

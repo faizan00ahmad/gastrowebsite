@@ -15,8 +15,8 @@ export default function BlogPage() {
   return (
     <>
       <PageHero
-        title="Health Awareness & Patient Education"
-        description="Clear, reliable information about digestive and liver health."
+        title="Health Blog"
+        description="Plain-language articles on digestive health, liver health and endoscopy, with references and review dates."
         crumbs={[{ name: "Health Blog", path: "/blog/" }]}
       />
       <Section>

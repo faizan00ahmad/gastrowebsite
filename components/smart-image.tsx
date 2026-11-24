@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 interface SmartImageProps {
-  src: string;
+  /** Empty or undefined shows the fallback straight away (no request is made). */
+  src?: string;
   alt: string;
   eager?: boolean;
   /**
@@ -20,7 +21,7 @@ interface SmartImageProps {
  * The effect also catches load errors that fired before React hydrated.
  */
 export function SmartImage({ src, alt, eager, fallback = "logo" }: SmartImageProps) {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState(!src);
   const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {

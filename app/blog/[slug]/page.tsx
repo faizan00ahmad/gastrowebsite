@@ -4,7 +4,7 @@ import { AsideBooking, AsideLinks } from "@/components/aside";
 import { JsonLd } from "@/components/json-ld";
 import { buildMetadata, articleJsonLd } from "@/lib/seo";
 import { articles } from "@/lib/content";
-import { site } from "@/lib/site";
+import Link from "next/link";
 
 export const dynamicParams = false;
 
@@ -32,11 +32,7 @@ export default async function ArticlePage({ params }: Props) {
   if (!article) notFound();
 
   const current = `/blog/${article.slug}/`;
-  const date = new Date(article.published).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const fmt = (d: string) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
   return (
     <>
@@ -54,9 +50,15 @@ export default async function ArticlePage({ params }: Props) {
         <div className="with-aside">
           <article>
             <p className="article-meta">
-              <time dateTime={article.published}>{date}</time>
+              <span>By {article.author}</span>
+              {article.reviewedBy && <span>Medically reviewed by {article.reviewedBy}</span>}
+              <span>
+                Published <time dateTime={article.published}>{fmt(article.published)}</time>
+              </span>
+              <span>
+                Updated <time dateTime={article.updated}>{fmt(article.updated)}</time>
+              </span>
               <span>{article.readingMinutes} min read</span>
-              <span>{article.reviewedBy ? `Medically reviewed by ${article.reviewedBy}` : site.name}</span>
             </p>
             <div className="article-body">
               {article.body.map((p, i) =>
@@ -69,6 +71,26 @@ export default async function ArticlePage({ params }: Props) {
                 ),
               )}
             </div>
+            <section className="review-meta" style={{ marginTop: 28 }}>
+              <h2>References</h2>
+              <ul className="card__points">
+                {article.references.map((r) => (
+                  <li key={r.href}>
+                    <a href={r.href} target="_blank" rel="noopener noreferrer">
+                      {r.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <h2>Related at GPMC</h2>
+              <ul className="card__points">
+                {article.related.map((r) => (
+                  <li key={r.href}>
+                    <Link href={r.href}>{r.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
             <div className="notice" style={{ marginTop: 24 }}>
               This article is for general education and does not replace a consultation. Speak with a specialist about
               your own symptoms and results.

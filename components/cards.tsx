@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Icon, type IconName } from "./icons";
 import { SmartImage } from "./smart-image";
-import type { Article, Department, Procedure, Specialist, Testimonial } from "@/lib/content";
+import { findDepartment, type Article, type Department, type Procedure, type Specialist } from "@/lib/content";
+import { appointmentHref } from "@/lib/site";
 
 /**
  * Cyan-bordered photo tile (reference "Our Specialties" style); the title sits below it.
@@ -17,7 +18,7 @@ function MediaHeader({ icon, image, kicker }: { icon: IconName; image?: string; 
   );
 }
 
-/** Whole card is one link: a single, large tap target and no repeated "Learn more" text. */
+/** Whole card is one link: a single, large tap target. */
 export function DepartmentCard({ dept }: { dept: Department }) {
   return (
     <Link href={`/departments/${dept.slug}/`} className="glass glass--interactive media-card">
@@ -25,12 +26,6 @@ export function DepartmentCard({ dept }: { dept: Department }) {
       <div className="media-card__body">
         <h3>{dept.title}</h3>
         <p>{dept.summary}</p>
-        <ul className="card__points">
-          {dept.points.slice(0, 2).map((p) => (
-            <li key={p}>{p}</li>
-          ))}
-        </ul>
-        {/* Blueprint Section 7: "Each card contains: Learn More →" */}
         <span className="link-arrow media-card__more">
           Learn More <Icon name="arrow" size={16} />
         </span>
@@ -46,7 +41,7 @@ export function ProcedureCard({ proc }: { proc: Procedure }) {
       <div className="media-card__body">
         <h3>{proc.title}</h3>
         <p>{proc.summary}</p>
-        <p className="media-card__meta">Preparation, what to expect and booking</p>
+        <p className="media-card__meta">{proc.group}</p>
       </div>
     </Link>
   );
@@ -68,37 +63,31 @@ export function ArticleCard({ article }: { article: Article }) {
   );
 }
 
+/** Directory card (Roadmap §4, Page 3): name, specialty, qualification line, department, two actions. */
 export function SpecialistCard({ doc }: { doc: Specialist }) {
+  const dept = findDepartment(doc.department);
   return (
-    <article className="glass media-card">
+    <article className="glass media-card doc-card">
       <div className="portrait" style={{ borderRadius: 0, boxShadow: "none" }}>
-        <SmartImage src={`/images/${doc.slug}.jpg`} alt={doc.name} />
+        <SmartImage src={doc.photo} alt={doc.name} />
       </div>
       <div className="media-card__body">
-        <h3 style={{ marginBottom: 2 }}>{doc.name}</h3>
-        <p style={{ marginBottom: 10 }}>{doc.roles.join(" | ")}</p>
-        {(doc.title || doc.qualifications?.length) && (
-          <div className="profile-role" style={{ margin: 0 }}>
-            {doc.title && <span className="pill">{doc.title}</span>}
-            {doc.qualifications?.map((q) => (
-              <span key={q} className="pill">
-                {q}
-              </span>
-            ))}
-          </div>
-        )}
-        {/* Blueprint Section 10: photo, name, qualification, speciality, experience, Book Appointment */}
+        <h3 style={{ marginBottom: 2 }}>
+          <Link href={`/specialists/${doc.slug}/`}>{doc.name}</Link>
+        </h3>
+        <p className="doc-card__roles">{doc.roles.join(" | ")}</p>
+        {doc.qualifications && <p className="doc-card__quals">{doc.qualifications.join(", ")}</p>}
         <dl className="doc-facts">
           <dt>Speciality</dt>
           <dd>{doc.specialty}</dd>
-          <dt>Position</dt>
-          <dd>
-            {doc.positions.map((p) => (
-              <span key={p.role + p.place} style={{ display: "block" }}>
-                {p.role}, {p.place}
-              </span>
-            ))}
-          </dd>
+          {dept && (
+            <>
+              <dt>Department</dt>
+              <dd>
+                <Link href={`/departments/${dept.slug}/`}>{dept.title}</Link>
+              </dd>
+            </>
+          )}
           {doc.experience && (
             <>
               <dt>Experience</dt>
@@ -107,40 +96,14 @@ export function SpecialistCard({ doc }: { doc: Specialist }) {
           )}
         </dl>
         <div className="card__footer btn-row">
-          <Link href="/contact/#book" className="btn btn--primary btn--sm">
-            Book Appointment
+          <Link href={`/specialists/${doc.slug}/`} className="btn btn--glass btn--sm">
+            View Profile
           </Link>
-          <Link href={`/specialists/${doc.slug}/`} className="link-arrow">
-            Full profile
+          <Link href={appointmentHref({ department: doc.department, specialist: doc.slug })} className="btn btn--primary btn--sm">
+            Request Appointment
           </Link>
         </div>
       </div>
     </article>
-  );
-}
-
-export function TestimonialCard({ t }: { t: Testimonial }) {
-  return (
-    <figure className="testimonial">
-      <div className="stars" role="img" aria-label={`${t.rating} out of 5 stars`}>
-        {Array.from({ length: t.rating }).map((_, i) => (
-          <Icon key={i} name="star" size={16} fill="currentColor" />
-        ))}
-      </div>
-      <blockquote style={{ margin: 0 }}>
-        <p>&ldquo;{t.quote}&rdquo;</p>
-      </blockquote>
-      <figcaption>
-        {t.author ?? "Patient"}
-        {t.source && (
-          <>
-            {" · "}
-            <a href={t.source.href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand-600)" }}>
-              {t.source.label}
-            </a>
-          </>
-        )}
-      </figcaption>
-    </figure>
   );
 }

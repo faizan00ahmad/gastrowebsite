@@ -2,96 +2,123 @@ import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { Icon } from "@/components/icons";
 import { IconTile, Section, SectionHeading, BookingButtons } from "@/components/primitives";
-import { DepartmentCard, ProcedureCard, SpecialistCard, TestimonialCard, ArticleCard } from "@/components/cards";
+import { DepartmentCard, ProcedureCard, ArticleCard } from "@/components/cards";
 import { SmartImage } from "@/components/smart-image";
 import { MapEmbed } from "@/components/map-embed";
-import { BookingForm } from "@/components/booking-form";
-import { Gallery } from "@/components/gallery";
-import { JsonLd } from "@/components/json-ld";
-import { buildMetadata, faqJsonLd } from "@/lib/seo";
-import { site } from "@/lib/site";
-import {
-  articles,
-  departments,
-  facebookGalleryPosts,
-  faqs,
-  galleryImages,
-  journey,
-  procedures,
-  specialists,
-  stats,
-  testimonials,
-  whyChoose,
-} from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
+import { directionsUrl, opdHoursLabel, site } from "@/lib/site";
+import { articles, departments, journey, procedures, specialists, whyChoose } from "@/lib/content";
 
 export const metadata = buildMetadata({
-  title: "Gastroenterologist & Endoscopy Centre in Multan",
+  title: "Gastroenterologist, Liver & Endoscopy Centre in Multan",
   description: site.description,
   path: "/",
 });
 
-const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapQuery)}`;
-
-/**
- * Home page. Section numbers and wording follow the GPMC Homepage Design Blueprint;
- * visual treatment follows the approved reference layout.
- */
+/** Home page: the ten sections of the GPMC Final Website Roadmap (§4, Page 1), in order. */
 export default function HomePage() {
-  const visibleStats = stats.filter((s) => s.value !== null);
-  const ceo = specialists[0];
+  const lead = specialists[0];
+  const focus = departments.filter((d) => d.focus);
+  const keyDepartments = departments.filter((d) => !d.focus);
+  const latest = [...articles].sort((a, b) => b.published.localeCompare(a.published)).slice(0, 3);
 
   return (
     <>
-      {/* Sections 1-3: top bar + header (layout) and hero */}
+      {/* 1. Hero */}
       <Hero />
 
-      {/* Section 4: achievements. Blueprint: "Display verified statistics only". Hidden until values are set. */}
-      {visibleStats.length > 0 && (
-        <Section tight>
-          <SectionHeading title="Trusted By Thousands of Patients" />
-          <div className="grid grid--4">
-            {visibleStats.map((s) => (
-              <div key={s.label} className="glass stat">
-                <IconTile name={s.icon} soft />
-                <span className="stat__value">{s.value}</span>
-                <span className="stat__label">{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {/* Section 5: message from the CEO (portrait left, message right) */}
+      {/* 2. Core clinical focus */}
       <Section>
-        <div className="glass profile-card">
-          <div className="portrait">
-            <SmartImage src={`/images/${ceo.slug}.jpg`} alt={ceo.name} />
+        <SectionHeading
+          eyebrow="Our specialty"
+          title="Core Clinical Focus"
+          description="GPMC is a specialist-led centre for digestive and liver conditions."
+        />
+        <div className="grid grid--3">
+          {focus.map((d) => (
+            <Link key={d.slug} href={`/departments/${d.slug}/`} className="focus-card">
+              <IconTile name={d.icon} />
+              <h3>{d.title === "Endoscopy Unit" ? "Diagnostic & Therapeutic Endoscopy" : d.title}</h3>
+              <p>{d.summary}</p>
+              <span className="link-arrow">
+                Learn more <Icon name="arrow" size={16} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      {/* 3. Lead consultant (short; full profile on the specialist page) */}
+      <Section className="section--alt">
+        <div className="lead-card">
+          <div className="lead-card__photo">
+            <SmartImage src={lead.photo} alt={lead.name} />
           </div>
           <div>
-            <span className="eyebrow">Message from the CEO</span>
-            <h2>A Message from Our CEO</h2>
-            <p style={{ fontSize: "1.08rem" }}>{ceo.bio[0]}</p>
-            <div className="signature">
-              <span className="signature__roles">{ceo.roles.join(" | ")}</span>
-              {ceo.title && <span>{ceo.title}</span>}
-              <strong>{ceo.name}</strong>
-              {ceo.qualifications && <span>{ceo.qualifications.join(", ")}</span>}
-              {ceo.positions.map((p) => (
-                <span key={p.role + p.place}>
-                  {p.role === "Chief Executive Officer" ? "CEO" : p.role} {p.place}
-                </span>
-              ))}
+            <span className="eyebrow">Lead Consultant</span>
+            <h2>{lead.name}</h2>
+            <p className="doc-roles">{lead.roles.join(" | ")}</p>
+            <p className="lead-card__quals">{lead.qualifications?.join(", ")}</p>
+            <ul className="lead-card__roles">
+              <li>Chief Executive Officer, Gastro Plus Medical Complex</li>
+              <li>{lead.title}</li>
+            </ul>
+            <div className="btn-row">
+              <Link href={`/specialists/${lead.slug}/`} className="btn btn--primary">
+                View Profile
+              </Link>
+              <Link href="/specialists/" className="link-arrow">
+                All specialists <Icon name="arrow" size={16} />
+              </Link>
             </div>
-            <Link href={`/specialists/${ceo.slug}/`} className="btn btn--primary" style={{ marginTop: 22 }}>
-              Read Full Profile
-            </Link>
           </div>
         </div>
       </Section>
 
-      {/* Section 6: why choose Gastro Plus (6 premium cards) */}
+      {/* 4. Key departments (support units; focus areas are above) */}
+      <Section>
+        <div className="section-row">
+          <div>
+            <span className="eyebrow">Under one roof</span>
+            <h2>Key Departments</h2>
+          </div>
+          <Link href="/departments/" className="link-arrow">
+            All departments <Icon name="arrow" size={16} />
+          </Link>
+        </div>
+        <div className="grid grid--5">
+          {keyDepartments.map((d) => (
+            <DepartmentCard key={d.slug} dept={d} />
+          ))}
+        </div>
+        <p className="scope-note">
+          <Icon name="check" size={16} />
+          These services are provided at GPMC. If you need a test or treatment that is not available here, your
+          specialist refers you and explains where to go.
+        </p>
+      </Section>
+
+      {/* 5. Featured procedures */}
       <Section className="section--alt">
-        <SectionHeading eyebrow="Introduction" title="Why Patients Choose Gastro Plus" />
+        <div className="section-row">
+          <div>
+            <span className="eyebrow">Procedures</span>
+            <h2>Featured Procedures</h2>
+          </div>
+          <Link href="/procedures/" className="link-arrow">
+            All procedures <Icon name="arrow" size={16} />
+          </Link>
+        </div>
+        <div className="grid grid--3">
+          {procedures.map((p) => (
+            <ProcedureCard key={p.slug} proc={p} />
+          ))}
+        </div>
+      </Section>
+
+      {/* 6. Why GPMC */}
+      <Section>
+        <SectionHeading eyebrow="Why GPMC" title="Why Patients Choose GPMC" />
         <ul className="icon-grid">
           {whyChoose.map((item) => (
             <li key={item.title} className="icon-item">
@@ -105,201 +132,99 @@ export default function HomePage() {
         </ul>
       </Section>
 
-      {/* Section 7: departments (six cards, each with Learn More) */}
-      <Section className="section--maroon">
-        <SectionHeading eyebrow="What We Offer" title="Comprehensive Healthcare Services Under One Roof" />
-        <div className="grid grid--3">
-          {departments.map((d) => (
-            <DepartmentCard key={d.slug} dept={d} />
-          ))}
-        </div>
-      </Section>
-
-      {/* Section 8: procedures of excellence (large cards + Explore Procedures) */}
+      {/* 7. Patient journey */}
       <Section className="section--alt">
-        <SectionHeading eyebrow="Procedures of Excellence" title="Advanced Diagnostic & Therapeutic Procedures" />
-        <div className="grid grid--3">
-          {procedures.map((p) => (
-            <ProcedureCard key={p.slug} proc={p} />
-          ))}
-        </div>
-        <div className="text-center" style={{ marginTop: 30 }}>
-          <Link href="/procedures/" className="btn btn--primary">
-            Explore Procedures
-          </Link>
-        </div>
-      </Section>
-
-      {/* Section 9: patient journey */}
-      <Section className="section--maroon">
-        <SectionHeading eyebrow="Patient Journey" title="Your Journey to Better Health" />
+        <SectionHeading eyebrow="Patient journey" title="How Your Visit Works" />
         <ol className="journey">
           {journey.map((step, i) => (
             <li key={step.title} className="glass journey__step">
               <span className="journey__num">{i + 1}</span>
               <p className="journey__title">{step.title}</p>
+              <p className="journey__text">{step.text}</p>
             </li>
           ))}
         </ol>
+        <p className="notice text-center" style={{ marginTop: 24 }}>
+          An appointment request is not a confirmed booking. Your appointment is confirmed only when our team contacts
+          you.
+        </p>
       </Section>
 
-      {/* Section 10: meet our specialists */}
-      <Section className="section--alt">
-        <SectionHeading eyebrow="Meet Our Specialists" title="Our Healthcare Experts" />
-        <div className="grid grid--3" style={{ maxWidth: specialists.length * 400, margin: "0 auto" }}>
-          {specialists.map((doc) => (
-            <SpecialistCard key={doc.slug} doc={doc} />
-          ))}
-        </div>
-      </Section>
-
-      {/* Section 12: patient testimonials (blueprint has no Section 11) */}
-      <section className="section band-dark">
-        <div className="container">
-          <SectionHeading eyebrow="Testimonials" title="What Our Patients Say" />
-          <div className="grid grid--3">
-            {testimonials.map((t) => (
-              <TestimonialCard key={t.quote} t={t} />
-            ))}
-          </div>
-          <p className="text-center" style={{ marginTop: 26 }}>
-            <a href={site.googleReviewsUrl} target="_blank" rel="noopener noreferrer" className="link-arrow" style={{ color: "var(--brand-300)" }}>
-              Read and leave reviews on Google <Icon name="arrow" size={16} />
-            </a>
-          </p>
-        </div>
-      </section>
-
-      {/* Section 13: health education center */}
+      {/* 8. Patient education */}
       <Section>
-        <SectionHeading eyebrow="Keeping You Well" title="Health Awareness & Patient Education" />
+        <div className="section-row">
+          <div>
+            <span className="eyebrow">Health Blog</span>
+            <h2>Patient Education</h2>
+          </div>
+          <Link href="/blog/" className="link-arrow">
+            All articles <Icon name="arrow" size={16} />
+          </Link>
+        </div>
         <div className="grid grid--3">
-          {articles.map((a) => (
+          {latest.map((a) => (
             <ArticleCard key={a.slug} article={a} />
           ))}
         </div>
-        <div className="text-center" style={{ marginTop: 30 }}>
-          <Link href="/blog/" className="btn btn--glass">
-            View All Articles
-          </Link>
+      </Section>
+
+      {/* 9. Patient feedback: genuine reviews only, on Google */}
+      <Section tight className="section--alt">
+        <div className="feedback-row">
+          <IconTile name="star" />
+          <div>
+            <h2>Patient Feedback</h2>
+            <p>We publish only genuine, consented reviews. Read and leave reviews for GPMC on Google.</p>
+          </div>
+          <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn--glass">
+            Reviews on Google
+          </a>
         </div>
       </Section>
 
-      {/* Section 14: full-width appointment banner */}
-      <section className="section--tight band-dark">
-        <div className="container">
-          <div className="cta-row" style={{ border: 0, margin: 0, padding: 0 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/gpmc-logo.png" alt="" width={64} height={64} className="cta-row__logo" />
-            <div>
-              <h2>Need Expert Gastroenterology Care?</h2>
-              <p>Schedule your appointment today and receive personalized care from our experienced specialists.</p>
-            </div>
-            <BookingButtons />
-          </div>
-        </div>
-      </section>
-
-      {/* Section 15: location & contact (map left, details right) */}
+      {/* 10. Location & final CTA */}
       <Section id="location">
         <div className="split">
-          <div className="glass" style={{ padding: 8, minHeight: 400 }}>
+          <div className="glass" style={{ padding: 8, minHeight: 380 }}>
             <MapEmbed />
           </div>
           <div className="stack">
-            <span className="eyebrow">Find Us</span>
-            <h2>Visit Gastro Plus Medical Complex Multan</h2>
+            <span className="eyebrow">Find us</span>
+            <h2>Visit GPMC</h2>
             <ul className="info-list">
               <li className="info-item">
-                <IconTile name="pin" />
+                <IconTile name="pin" soft />
                 <div>
                   <strong>Address</strong>
                   <p>{site.address.full}</p>
+                  <a className="link-arrow" href={directionsUrl} target="_blank" rel="noopener noreferrer">
+                    Get directions
+                  </a>
                 </div>
               </li>
               <li className="info-item">
-                <IconTile name="phone" />
+                <IconTile name="phone" soft />
                 <div>
-                  <strong>Contact Numbers</strong>
-                  {site.phones.map((p) => (
-                    <p key={p.href}>
-                      <a href={`tel:${p.href}`}>{p.display}</a>
-                    </p>
-                  ))}
+                  <strong>Call or WhatsApp</strong>
+                  <p>
+                    <a href={`tel:${site.phones[0].href}`}>{site.phones[0].display}</a>
+                  </p>
                 </div>
               </li>
-              {site.email && (
-                <li className="info-item">
-                  <IconTile name="mail" />
-                  <div>
-                    <strong>Email Address</strong>
-                    <p>
-                      <a href={`mailto:${site.email}`}>{site.email}</a>
-                    </p>
-                  </div>
-                </li>
-              )}
               <li className="info-item">
-                <IconTile name="clock" />
+                <IconTile name="clock" soft />
                 <div>
-                  <strong>Working Hours</strong>
-                  <p>{site.hours.days}</p>
-                  <p style={{ fontSize: "0.88rem" }}>{site.hours.time || "Please call to confirm timings."}</p>
+                  <strong>OPD hours</strong>
+                  <p>{opdHoursLabel()}</p>
+                  <Link className="link-arrow" href="/contact/#hours">
+                    Specialist timings
+                  </Link>
                 </div>
               </li>
             </ul>
-            <div className="btn-row">
-              <a className="btn btn--glass" href={directionsUrl} target="_blank" rel="noopener noreferrer">
-                <Icon name="pin" size={18} />
-                Get Directions
-              </a>
-              <Link href="/contact/#book" className="btn btn--primary">
-                Book Appointment
-              </Link>
-            </div>
+            <BookingButtons />
           </div>
         </div>
-      </Section>
-
-      {/* Additions beyond the blueprint: FAQ, online booking form, gallery (last) */}
-      <Section className="section--alt">
-        <div className="split" style={{ alignItems: "start" }}>
-          <div>
-            <span className="eyebrow">General Query</span>
-            <h2>Frequently Asked Questions</h2>
-            <p>Can&apos;t find your answer? Call {site.phones[0].display} and our front desk will help.</p>
-          </div>
-          <div className="faq">
-            {faqs.map((f, i) => (
-              <details key={f.question} open={i === 0}>
-                <summary>
-                  <span className="faq__num">{String(i + 1).padStart(2, "0")}</span>
-                  {f.question}
-                </summary>
-                <div className="faq__body">
-                  <p>{f.answer}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-        <JsonLd data={faqJsonLd(faqs)} />
-      </Section>
-
-      <Section id="book" className="section--maroon">
-        <div className="split" style={{ alignItems: "start" }}>
-          <div>
-            <span className="eyebrow">Online Booking</span>
-            <h2>Online Appointment Booking</h2>
-            <p>Fill in the form and it opens WhatsApp with your details. Our front desk replies with a time.</p>
-          </div>
-          <BookingForm />
-        </div>
-      </Section>
-
-      <Section id="gallery" className="section--alt">
-        <SectionHeading eyebrow="From Our Facebook Page" title="Gallery" />
-        <Gallery images={galleryImages} facebookPosts={facebookGalleryPosts} />
       </Section>
     </>
   );

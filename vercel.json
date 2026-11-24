@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    { "source": "/patient-guides/", "destination": "/patient-resources/", "permanent": true },
+    { "source": "/departments/endoscopy-suite/", "destination": "/departments/endoscopy-unit/", "permanent": true },
+    { "source": "/departments/ultrasound-radiology/", "destination": "/departments/ultrasound/", "permanent": true },
+    { "source": "/departments/short-stay-unit/", "destination": "/departments/short-stay-ipd/", "permanent": true },
+    { "source": "/specialists/dr-hunain/", "destination": "/specialists/dr-muhammad-hunain/", "permanent": true }
+  ]
+}

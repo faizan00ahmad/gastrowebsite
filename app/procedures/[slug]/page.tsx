@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageHero, Section } from "@/components/primitives";
+import { PageHero, Section, BookingButtons } from "@/components/primitives";
 import { AsideBooking, AsideLinks } from "@/components/aside";
-import { Icon } from "@/components/icons";
-import { buildMetadata } from "@/lib/seo";
-import { procedures } from "@/lib/content";
+import { Icon, type IconName } from "@/components/icons";
+import { JsonLd } from "@/components/json-ld";
+import { buildMetadata, procedureJsonLd } from "@/lib/seo";
+import { findProcedure, procedures } from "@/lib/content";
 
 export const dynamicParams = false;
 
@@ -15,28 +17,48 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const proc = procedures.find((p) => p.slug === slug);
+  const proc = findProcedure(slug);
   if (!proc) return {};
   return buildMetadata({
     title: `${proc.title} in Multan`,
-    description: `${proc.title} in Multan at Gastro Plus Medical Complex. ${proc.summary}`,
+    description: `${proc.title}${proc.alsoKnownAs ? ` (${proc.alsoKnownAs})` : ""} at Gastro Plus Medical Complex Multan: why it is done, preparation, risks and recovery.`,
     path: `/procedures/${proc.slug}/`,
   });
 }
 
+function ListBlock({ title, icon, items }: { title: string; icon: IconName; items: string[] }) {
+  return (
+    <section className="glass detail-card">
+      <h2>
+        <Icon name={icon} size={22} /> {title}
+      </h2>
+      <ul className="ticks">
+        {items.map((p) => (
+          <li key={p}>
+            <Icon name="check" size={18} />
+            {p}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Procedure page template (Roadmap §4, Page 5). */
 export default async function ProcedurePage({ params }: Props) {
   const { slug } = await params;
-  const proc = procedures.find((p) => p.slug === slug);
+  const proc = findProcedure(slug);
   if (!proc) notFound();
 
   const current = `/procedures/${proc.slug}/`;
+  const updated = new Date(proc.lastUpdated).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
   return (
     <>
       <PageHero
-        eyebrow="Procedure"
+        eyebrow={proc.group}
         title={proc.title}
-        description={proc.summary}
+        description={proc.alsoKnownAs ? `${proc.alsoKnownAs}. ${proc.summary}` : proc.summary}
         image={proc.image}
         crumbs={[
           { name: "Procedures", path: "/procedures/" },
@@ -45,47 +67,81 @@ export default async function ProcedurePage({ params }: Props) {
       />
       <Section>
         <div className="with-aside">
-          <div>
+          <div className="procedure">
             <h2>What is {proc.title}?</h2>
             <p className="detail-lead">{proc.whatItIs}</p>
 
-            <div className="detail-grid">
-              <section className="glass detail-card">
-                <h2>
-                  <Icon name="check" size={22} /> What to expect
-                </h2>
-                <ul className="ticks">
-                  {proc.whatToExpect.map((p) => (
-                    <li key={p}>
-                      <Icon name="check" size={18} />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              <section className="glass detail-card">
-                <h2>
-                  <Icon name="calendar" size={22} /> Preparation
-                </h2>
-                <ul className="ticks">
-                  {proc.preparation.map((p) => (
-                    <li key={p}>
-                      <Icon name="check" size={18} />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+            <h2>Why might it be recommended?</h2>
+            <ul className="card__points">
+              {proc.whyRecommended.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
+            <p className="procedure__fine">Not everyone with these symptoms needs this procedure.</p>
+
+            <h2>Who decides if it is suitable?</h2>
+            <p>{proc.suitability}</p>
+
+            <div className="notice notice--strong">
+              <strong>Your personal instructions come first.</strong> Fasting, bowel preparation and stopping medicines
+              are different for each patient. Blood thinners, diabetes medicines, kidney disease, pregnancy and other
+              factors can change what you need to do. Follow the written instructions your treating team gives you.
             </div>
 
-            <div className="notice" style={{ marginTop: 24 }}>
-              Your doctor will give you personalised instructions. This page is general information and does not
-              replace medical advice.
+            <div className="detail-grid">
+              <ListBlock title="How to prepare" icon="calendar" items={proc.preparation} />
+              <ListBlock title="During the procedure" icon="scan" items={proc.during} />
+              <ListBlock title="Possible risks" icon="shield" items={proc.risks} />
+              <ListBlock title="Recovery and follow-up" icon="heart" items={proc.recovery} />
             </div>
+
+            <section className="urgent">
+              <h2>
+                <Icon name="phone" size={22} /> When to contact us or seek urgent care
+              </h2>
+              <ul className="card__points">
+                {proc.whenToContact.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+              <p>
+                Contact the GPMC team if you notice any of these after your procedure. If symptoms are severe, call
+                Rescue 1122 or go to the nearest emergency department.
+              </p>
+            </section>
+
+            <footer className="review-meta">
+              <p>
+                <strong>Last updated:</strong> {updated}
+                {proc.reviewedBy && (
+                  <>
+                    {" · "}
+                    <strong>Medically reviewed by:</strong> {proc.reviewedBy}
+                  </>
+                )}
+              </p>
+              <p>
+                <strong>References:</strong>{" "}
+                {proc.references.map((r, i) => (
+                  <span key={r.href}>
+                    {i > 0 && "; "}
+                    <a href={r.href} target="_blank" rel="noopener noreferrer">
+                      {r.label}
+                    </a>
+                  </span>
+                ))}
+              </p>
+              <p>
+                General information only; it does not replace advice from your doctor. See also{" "}
+                <Link href="/patient-resources/#preparation">preparation guides</Link>.
+              </p>
+            </footer>
+
+            <BookingButtons department={proc.department} />
           </div>
 
           <aside className="aside">
-            <AsideBooking title={`Book ${proc.title}`} />
+            <AsideBooking title={`Request ${proc.title}`} department={proc.department} />
             <AsideLinks
               title="Our Procedures"
               current={current}
@@ -94,6 +150,7 @@ export default async function ProcedurePage({ params }: Props) {
           </aside>
         </div>
       </Section>
+      <JsonLd data={procedureJsonLd(proc)} />
     </>
   );
 }

@@ -15,16 +15,34 @@ export default function PrivacyPage() {
       <Section>
         <div className="glass glass-pad prose">
           <p>
-            This website is a static information site. It does not collect or store data on a server. When you use
-            the booking form, the details you type are sent to WhatsApp by your own device, directly to the clinic.
+            This website is a static information site. It does not store the details you type into its forms on any
+            server.
+          </p>
+          <h2>Appointment Request form</h2>
+          <p>
+            The form asks only for what is needed to arrange a visit: patient name, mobile number, department,
+            preferred specialist, date and time, visit type and a short reason. When you press send, your own device
+            opens WhatsApp with these details, addressed to the GPMC number {site.phones[0].display}. Nothing is sent
+            until you press send in WhatsApp. Please do not include your full medical history.
+          </p>
+          <p>
+            GPMC staff use these details only to contact you and arrange your appointment. A request is not a confirmed
+            appointment until our team contacts you.
+          </p>
+          <h2>Job applications and CVs</h2>
+          <p>
+            The careers form prepares a WhatsApp message in the same way, and you attach your CV in WhatsApp. CVs are
+            used only for recruitment, are seen only by GPMC management and staff involved in recruitment, and are kept
+            only as long as needed for recruitment. To correct or delete your details, call {site.phones[0].display}.
           </p>
           <h2>Information you share</h2>
           <p>
-            If you contact us by phone, WhatsApp or email, we use your information only to respond to your enquiry
-            and arrange your care.
+            If you contact us by phone or WhatsApp, we use your information only to respond to your enquiry and
+            arrange your care. Social media messages are not a secure channel for clinical consultation and must not be
+            used for emergencies.
           </p>
           <h2>Cookies and analytics</h2>
-          <p>This site does not set its own tracking cookies. Embedded Google Maps and Facebook posts are loaded from those services and follow their own privacy policies.</p>
+          <p>This site does not set its own tracking cookies. The embedded Google Map is loaded from Google and follow their own privacy policies.</p>
           <h2>Contact</h2>
           <p>
             For privacy questions, contact {site.name} on{" "}

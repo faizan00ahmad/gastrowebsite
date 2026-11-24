@@ -5,6 +5,7 @@ import { JsonLd } from "./json-ld";
 import { SmartImage } from "./smart-image";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import { BOOKING_MESSAGE, whatsappLink } from "@/lib/whatsapp";
+import { appointmentHref } from "@/lib/site";
 
 export function Section({
   id,
@@ -105,11 +106,22 @@ export function IconTile({ name, soft }: { name: IconName; soft?: boolean }) {
   );
 }
 
-/** Primary booking + WhatsApp call-to-action pair. */
-export function BookingButtons({ compact }: { compact?: boolean }) {
+/** The one shared appointment CTA: Book Appointment + WhatsApp, optionally preselecting the form. */
+export function BookingButtons({
+  compact,
+  department,
+  specialist,
+}: {
+  compact?: boolean;
+  department?: string;
+  specialist?: string;
+}) {
   return (
     <div className="btn-row">
-      <Link href="/contact/#book" className={`btn btn--primary ${compact ? "btn--sm" : ""}`}>
+      <Link
+        href={appointmentHref({ department, specialist })}
+        className={`btn btn--primary ${compact ? "btn--sm" : ""}`}
+      >
         <Icon name="calendar" size={18} />
         Book Appointment
       </Link>
@@ -126,18 +138,15 @@ export function BookingButtons({ compact }: { compact?: boolean }) {
   );
 }
 
-export function CtaBanner() {
+export function CtaBanner({ department, specialist }: { department?: string; specialist?: string }) {
   return (
-    <Section>
+    <Section tight>
       <div className="cta-banner">
         <div>
           <h2>Need Expert Gastroenterology Care?</h2>
-          <p>
-            Schedule your appointment today and receive personalized care from our experienced
-            specialists.
-          </p>
+          <p>Request an appointment online, on WhatsApp or by phone. Our team will contact you to confirm a time.</p>
         </div>
-        <BookingButtons />
+        <BookingButtons department={department} specialist={specialist} />
       </div>
     </Section>
   );

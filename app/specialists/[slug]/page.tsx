@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CtaBanner, PageHero, Section, BookingButtons } from "@/components/primitives";
+import { PageHero, Section, BookingButtons } from "@/components/primitives";
 import { JsonLd } from "@/components/json-ld";
 import { SmartImage } from "@/components/smart-image";
 import { buildMetadata, physicianJsonLd } from "@/lib/seo";
-import { specialists } from "@/lib/content";
+import { findDepartment, findSpecialist, specialists } from "@/lib/content";
+import { opdHoursLabel } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -13,48 +15,46 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ slug: string }> };
 
-function findSpecialist(slug: string) {
-  return specialists.find((s) => s.slug === slug);
-}
-
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const doc = findSpecialist(slug);
   if (!doc) return {};
   return buildMetadata({
     title: `${doc.name}, ${doc.roles.join(" & ")} in Multan`,
-    description: [
-      doc.qualifications?.length ? `${doc.name} (${doc.qualifications.join(", ")})` : doc.name,
-      doc.title,
-      doc.roles.join(", "),
-      doc.positions.map((p) => `${p.role}, ${p.place}`).join("; "),
-    ]
-      .filter(Boolean)
-      .join(". ") + ".",
+    description:
+      [
+        doc.qualifications?.length ? `${doc.name} (${doc.qualifications.join(", ")})` : doc.name,
+        doc.roles.join(", "),
+        doc.positions.map((p) => `${p.role}, ${p.place}`).join("; "),
+      ]
+        .filter(Boolean)
+        .join(". ") + ". Request an appointment at Gastro Plus Medical Complex Multan.",
     path: `/specialists/${doc.slug}/`,
   });
 }
 
+/** One profile template for every clinician (Roadmap §4, Page 3). */
 export default async function SpecialistPage({ params }: Props) {
   const { slug } = await params;
   const doc = findSpecialist(slug);
   if (!doc) notFound();
+  const dept = findDepartment(doc.department);
 
   return (
     <>
       <PageHero
-        eyebrow={doc.title ?? doc.specialty}
+        eyebrow={doc.specialty}
         title={doc.name}
         description={[doc.roles.join(" | "), (doc.qualifications ?? []).join(", ")].filter(Boolean).join(" · ")}
         crumbs={[
-          { name: "Our Specialists", path: "/specialists/" },
+          { name: "Specialists", path: "/specialists/" },
           { name: doc.name, path: `/specialists/${doc.slug}/` },
         ]}
       />
       <Section>
         <div className="glass profile-card">
           <div className="portrait">
-            <SmartImage src={`/images/${doc.slug}.jpg`} alt={doc.name} eager />
+            <SmartImage src={doc.photo} alt={doc.name} eager />
           </div>
           <div className="stack">
             <div>
@@ -70,7 +70,19 @@ export default async function SpecialistPage({ params }: Props) {
             </div>
 
             <section>
-              <h2 className="doc-subhead">Current Positions</h2>
+              <h2 className="doc-subhead">Biography</h2>
+              {doc.bio.map((p) => (
+                <p key={p.slice(0, 30)}>{p}</p>
+              ))}
+              {doc.experience && (
+                <p>
+                  <strong>Experience:</strong> {doc.experience}
+                </p>
+              )}
+            </section>
+
+            <section>
+              <h2 className="doc-subhead">Professional Roles</h2>
               <ul className="positions">
                 {doc.positions.map((p) => (
                   <li key={p.role + p.place}>
@@ -81,37 +93,37 @@ export default async function SpecialistPage({ params }: Props) {
               </ul>
             </section>
 
-            {doc.qualifications && (
+            {doc.interests && (
               <section>
-                <h2 className="doc-subhead">Qualifications</h2>
+                <h2 className="doc-subhead">Clinical Interests</h2>
                 <ul className="card__points">
-                  {doc.qualifications.map((q) => (
-                    <li key={q}>{q}</li>
+                  {doc.interests.map((i) => (
+                    <li key={i}>{i}</li>
                   ))}
                 </ul>
               </section>
             )}
 
             <section>
-              <h2 className="doc-subhead">
-                {doc.positions.some((p) => p.role === "Chief Executive Officer") ? "Message from the CEO" : "About"}
-              </h2>
-              {doc.bio.map((p) => (
-                <p key={p.slice(0, 30)} style={{ fontSize: "1.05rem" }}>
-                  {p}
+              <h2 className="doc-subhead">Consultation at GPMC</h2>
+              {doc.schedule ? (
+                <p>{doc.schedule}</p>
+              ) : (
+                <p>
+                  GPMC OPD: {opdHoursLabel()}. Please call to confirm {doc.name}&apos;s clinic days before your visit.
                 </p>
-              ))}
+              )}
+              {dept && (
+                <p>
+                  Department: <Link href={`/departments/${dept.slug}/`}>{dept.title}</Link>
+                </p>
+              )}
             </section>
-            {doc.experience && (
-              <p>
-                <strong>Experience:</strong> {doc.experience}
-              </p>
-            )}
-            <BookingButtons />
+
+            <BookingButtons department={doc.department} specialist={doc.slug} />
           </div>
         </div>
       </Section>
-      <CtaBanner />
       <JsonLd data={physicianJsonLd(doc)} />
     </>
   );

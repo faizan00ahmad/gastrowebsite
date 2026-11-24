@@ -3,16 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Icon, WhatsAppGlyph } from "./icons";
-import { navItems, site } from "@/lib/site";
-import { BOOKING_MESSAGE, whatsappLink } from "@/lib/whatsapp";
-
-const socialIcon = {
-  Facebook: "facebook",
-  Instagram: "instagram",
-  YouTube: "youtube",
-  LinkedIn: "linkedin",
-} as const;
+import { Icon } from "./icons";
+import { appointmentHref, navItems, site } from "@/lib/site";
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
@@ -20,12 +12,14 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 /**
- * Blueprint Section 1 (dark top information bar) + Section 2 (main header),
- * laid out like the reference: brand row, then a sticky glass nav bar.
+ * Roadmap §2. Desktop: quiet utility strip (location + main number), then
+ * logo, the nine menu items and one primary "Book Appointment" button.
+ * Mobile: logo + hamburger; Call / WhatsApp / Book live in the bottom action bar.
  */
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -36,95 +30,41 @@ export function SiteHeader() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  useEffect(() => {
+    const onScroll = () => setCompact(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const main = site.phones[0];
+
   return (
     <>
-      {/* Section 1: top information bar */}
-      <div className="topbar">
-        <div className="container topbar__inner">
-          <ul className="topbar__info">
-            <li>
-              <Icon name="pin" size={14} />
-              {site.address.full}
-            </li>
-            <li>
-              <Icon name="phone" size={14} />
-              {site.phones.map((p, i) => (
-                <span key={p.href}>
-                  {i > 0 && ", "}
-                  <a href={`tel:${p.href}`}>{p.display}</a>
-                </span>
-              ))}
-            </li>
-            <li className="topbar__hide-sm">
-              <Icon name="clock" size={14} />
-              {site.hours.days}
-            </li>
-          </ul>
-          <ul className="topbar__social">
-            {site.social.map((s) => (
-              <li key={s.name}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.name}>
-                  <Icon name={socialIcon[s.name]} size={14} />
-                </a>
-              </li>
-            ))}
-          </ul>
+      <div className="utility">
+        <div className="container utility__inner">
+          <span>
+            <Icon name="pin" size={14} />
+            {site.address.full}
+          </span>
+          <a href={`tel:${main.href}`}>
+            <Icon name="phone" size={14} />
+            {main.display}
+          </a>
         </div>
       </div>
 
-      {/* Section 2: brand row */}
-      <div className="header-top">
-        <div className="container header-top__inner">
+      <header className={`site-header${compact ? " site-header--compact" : ""}`}>
+        <div className="container site-header__inner">
           <Link href="/" className="brand" aria-label={`${site.name} home`}>
+            {/* Original GPMC logo, unaltered */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/gpmc-logo.png" alt="" width={60} height={60} className="brand__logo" />
+            <img src="/images/gpmc-logo.png" alt="" width={56} height={56} className="brand__logo" />
             <span className="brand__text">
-              <span className="brand__name">GASTRO PLUS</span>
+              <span className="brand__name">Gastro Plus</span>
               <span className="brand__sub">Medical Complex Multan</span>
-              <span className="brand__urdu urdu" lang="ur" dir="rtl">
-                {site.urduName}
-              </span>
             </span>
           </Link>
-
-          <div className="header-contacts">
-            <div className="header-contact">
-              <WhatsAppGlyph size={34} className="header-contact__icon" />
-              <div>
-                <small>WhatsApp Support</small>
-                <a href={whatsappLink(BOOKING_MESSAGE)} target="_blank" rel="noopener noreferrer">
-                  {site.phones[0].display}
-                </a>
-              </div>
-            </div>
-            <div className="header-contact">
-              <Icon name="phone" size={32} className="header-contact__icon" />
-              <div>
-                <small>Contact Us</small>
-                {site.phones.map((p) => (
-                  <a key={p.href} href={`tel:${p.href}`}>
-                    {p.display}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 2: menu + Book Appointment + WhatsApp icon */}
-      <header className="header-nav">
-        <div className="container header-nav__inner">
-          <button
-            type="button"
-            className="menu-toggle"
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
-          >
-            <Icon name={open ? "close" : "menu"} size={24} />
-          </button>
 
           <nav aria-label="Primary" className="nav-links">
             {navItems.map((item) => (
@@ -134,22 +74,20 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="nav-blocks">
-            <a
-              href={whatsappLink(BOOKING_MESSAGE)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-block nav-block--wa"
-              aria-label="Chat on WhatsApp"
-            >
-              <WhatsAppGlyph size={20} />
-              <span className="nav-block__label">WhatsApp</span>
-            </a>
-            <Link href="/contact/#book" className="nav-block nav-block--brand">
-              <Icon name="calendar" size={18} />
-              Book Appointment
-            </Link>
-          </div>
+          <Link href={appointmentHref()} className="btn btn--primary header-cta">
+            Book Appointment
+          </Link>
+
+          <button
+            type="button"
+            className="menu-toggle"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <Icon name={open ? "close" : "menu"} size={26} />
+          </button>
         </div>
 
         {open && (

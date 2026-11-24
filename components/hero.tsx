@@ -1,112 +1,61 @@
 import Link from "next/link";
-import { Icon, WhatsAppGlyph, type IconName } from "./icons";
+import { Icon, WhatsAppGlyph } from "./icons";
 import { SmartImage } from "./smart-image";
-import { site } from "@/lib/site";
-import { whatsappLink } from "@/lib/whatsapp";
+import { appointmentHref, opdHoursLabel, site } from "@/lib/site";
+import { BOOKING_MESSAGE, whatsappLink } from "@/lib/whatsapp";
+import { specialists } from "@/lib/content";
 
-/** Trust strip, exactly as listed in the blueprint (Section 3). */
-const trustStrip: { label: string; icon: IconName }[] = [
-  { label: "OPD Services", icon: "clock" },
-  { label: "Expert Consultants", icon: "user" },
-  { label: "Advanced Endoscopy Suite", icon: "scan" },
-  { label: "Diagnostic Laboratory", icon: "flask" },
-  { label: "Ultrasound Services", icon: "activity" },
-  { label: "Pharmacy", icon: "pill" },
-  { label: "Short Stay Care", icon: "bed" },
-  { label: "IPD / Admission Services", icon: "heart" },
-];
-
-/** Section 3 hero: heading, subheading, two buttons, trust strip, CEO portrait. */
+/**
+ * Home section 1 (Roadmap §4): specialty identity and location in the first
+ * screen, an authentic photograph, Book Appointment and WhatsApp / Call.
+ */
 export function Hero() {
+  const lead = specialists[0];
   return (
-    <section aria-labelledby="hero-title">
-      <div className="hero__banner">
-        <div className="container hero__inner">
-          <div className="hero__copy">
-            <p className="hero__urdu urdu" lang="ur" dir="rtl">
-              {site.urduTagline}
-            </p>
-            <h1 id="hero-title">
-              Excellence in Gastroenterology
-              <span>&amp; Comprehensive Healthcare</span>
-            </h1>
-            <p className="hero__lead">
-              Advanced digestive healthcare, endoscopy services, diagnostics, and patient-centered medical care
-              delivered by experienced specialists in Multan.
-            </p>
-            <div className="btn-row" style={{ marginTop: 24 }}>
-              <Link href="/contact/#book" className="btn btn--primary">
-                <Icon name="calendar" size={18} />
-                Book Appointment
-              </Link>
-              <Link href="/specialists/" className="btn btn--glass">
-                Meet Our Specialists
-              </Link>
-            </div>
-            <ul className="hero__chips" aria-label="Services available">
-              {trustStrip.map((c) => (
-                <li key={c.label} className="glass hero-chip">
-                  <Icon name={c.icon} size={26} />
-                  {c.label}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="hero__media">
-            <div className="hero__media-frame">
-              <SmartImage
-                src="/images/dr-umair-khan-sherwani.jpg"
-                alt="Dr. Umair Khan Sherwani, Gastroenterologist, Hepatologist and Interventional Endoscopist"
-                eager
-              />
-            </div>
-            <div className="hero__name-tag glass">
-              <strong>Dr. Umair Khan Sherwani</strong>
-              <span>Gastroenterologist | Hepatologist | Interventional Endoscopist</span>
-              <span className="hero__name-tag-sub">MBBS (KEMU), FCPS Gastroenterology</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="hero__strip">
-          <div className="container hero__strip-inner">
-            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-              <WhatsAppGlyph size={20} />
-              {site.phones[0].display}
-            </a>
-            <a href={`tel:${site.phones[1].href}`}>
-              <Icon name="phone" size={18} />
-              {site.phones[1].display}
-            </a>
-            <span>
+    <section aria-labelledby="hero-title" className="hero__banner">
+      <div className="container hero__inner">
+        <div className="hero__copy">
+          <p className="hero__urdu urdu" lang="ur" dir="rtl">
+            {site.urduTagline}
+          </p>
+          <h1 id="hero-title">Expert Care for Digestive &amp; Liver Health</h1>
+          <p className="hero__identity">{site.descriptor}</p>
+          <p className="hero__lead">
+            Gastroenterology, hepatology and diagnostic &amp; therapeutic endoscopy at Gastro Plus Medical Complex.
+          </p>
+          <ul className="hero__facts">
+            <li>
               <Icon name="pin" size={18} />
               {site.address.full}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="info-boxes">
-          <div className="info-box">
-            <h2>Appointments</h2>
-            {site.phones.map((p) => (
-              <p key={p.href}>
-                <a href={`tel:${p.href}`}>{p.display}</a>
-              </p>
-            ))}
-          </div>
-          <div className="info-box">
-            <h2>Find Your Specialist</h2>
-            <Link href="/contact/#book" className="btn btn--primary btn--sm">
+            </li>
+            <li>
+              <Icon name="clock" size={18} />
+              OPD: {opdHoursLabel()}
+            </li>
+          </ul>
+          <div className="btn-row" style={{ marginTop: 26 }}>
+            <Link href={appointmentHref()} className="btn btn--primary">
+              <Icon name="calendar" size={18} />
               Book Appointment
             </Link>
+            <a href={whatsappLink(BOOKING_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn btn--glass">
+              <WhatsAppGlyph size={18} />
+              WhatsApp
+            </a>
+            <a href={`tel:${site.phones[0].href}`} className="btn btn--glass">
+              <Icon name="phone" size={18} />
+              Call {site.phones[0].display}
+            </a>
           </div>
-          <div className="info-box info-box--brand">
-            <h2>Working Hours</h2>
-            <p>{site.hours.days}</p>
-            <p style={{ opacity: 0.85 }}>{site.hours.time || "Call to confirm timings"}</p>
+        </div>
+
+        <div className="hero__media">
+          <div className="hero__media-frame">
+            <SmartImage src={lead.photo} alt={`${lead.name}, ${lead.roles.join(", ")}`} eager />
+          </div>
+          <div className="hero__name-tag glass">
+            <strong>{lead.name}</strong>
+            <span>Lead Consultant · {lead.qualifications?.join(", ")}</span>
           </div>
         </div>
       </div>

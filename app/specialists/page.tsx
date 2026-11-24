@@ -4,9 +4,9 @@ import { buildMetadata } from "@/lib/seo";
 import { specialists } from "@/lib/content";
 
 export const metadata = buildMetadata({
-  title: "Our Specialists",
+  title: "Specialists",
   description:
-    "Meet the gastroenterologists and hepatologists at Gastro Plus Medical Complex Multan, with qualifications, speciality and how to book.",
+    "Specialists at Gastro Plus Medical Complex Multan: gastroenterology, hepatology and interventional endoscopy, and dental surgery. Qualifications and appointment requests.",
   path: "/specialists/",
 });
 
@@ -14,12 +14,12 @@ export default function SpecialistsPage() {
   return (
     <>
       <PageHero
-        title="Our Specialists"
-        description="Consultant gastroenterology and liver care in Multan. More consultants will be listed here as they join."
-        crumbs={[{ name: "Our Specialists", path: "/specialists/" }]}
+        title="Specialists"
+        description="Find the right clinician and request an appointment. Full details are on each profile."
+        crumbs={[{ name: "Specialists", path: "/specialists/" }]}
       />
       <Section>
-        <div className="grid grid--3">
+        <div className="grid grid--doctors">
           {specialists.map((doc) => (
             <SpecialistCard key={doc.slug} doc={doc} />
           ))}

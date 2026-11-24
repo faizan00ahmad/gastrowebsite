@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 // Fonts are installed from npm (Fontsource) and bundled with the site, so the
 // build never downloads from Google Fonts and the site makes no font requests to Google.
 import "@fontsource/rajdhani/600.css";
@@ -21,11 +21,12 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { JsonLd } from "@/components/json-ld";
 import { organizationJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { indexable } from "@/lib/seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Gastroenterology & Endoscopy in Multan`,
+    default: `${site.name} Multan | Gastroenterology, Liver & Endoscopy`,
     template: `%s | ${site.shortName} Multan`,
   },
   description: site.description,
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     "colonoscopy in Multan",
     "ERCP in Multan",
     "liver specialist in Multan",
-    "gastro clinic Multan",
+    "hepatologist in Multan",
     "Gastro Plus Medical Complex",
   ],
   authors: [{ name: site.name }],
@@ -44,7 +45,10 @@ export const metadata: Metadata = {
   publisher: site.name,
   icons: { icon: "/images/gpmc-logo.png", apple: "/images/gpmc-logo.png" },
   formatDetection: { email: false, address: false, telephone: true },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  // Roadmap §11: staging/preview builds are not indexed. Set NEXT_PUBLIC_ALLOW_INDEXING=true on the approved production site.
+  robots: indexable
+    ? { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } }
+    : { index: false, follow: false },
   openGraph: {
     siteName: site.name,
     locale: site.locale,
@@ -63,7 +67,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <body id="top">
         <a href="#main" className="skip-link">
           Skip to content
         </a>

@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { Icon } from "./icons";
 import { BookingButtons } from "./primitives";
-import { site } from "@/lib/site";
+import { opdHoursLabel, site } from "@/lib/site";
 
 /** Patterned booking card for the sticky sidebar on detail pages. */
-export function AsideBooking({ title = "Book an Appointment" }: { title?: string }) {
+export function AsideBooking({
+  title = "Request an Appointment",
+  department,
+  specialist,
+}: {
+  title?: string;
+  department?: string;
+  specialist?: string;
+}) {
   return (
     <section className="aside-booking" aria-labelledby="aside-booking-title">
       <h2 id="aside-booking-title">{title}</h2>
-      <p>Speak to our team today. We confirm appointments by phone or WhatsApp.</p>
+      <p>Our team contacts you to confirm the date and time. OPD: {opdHoursLabel()}.</p>
       <div className="aside-booking__phones">
         {site.phones.map((p) => (
           <a key={p.href} href={`tel:${p.href}`}>
@@ -17,7 +25,7 @@ export function AsideBooking({ title = "Book an Appointment" }: { title?: string
           </a>
         ))}
       </div>
-      <BookingButtons compact />
+      <BookingButtons compact department={department} specialist={specialist} />
     </section>
   );
 }

@@ -19,7 +19,7 @@ export default function TermsPage() {
             is not a substitute for a consultation with a qualified doctor.
           </p>
           <h2>Appointments</h2>
-          <p>Booking requests are confirmed by our team. Timings may change based on specialty and clinic schedules.</p>
+          <p>An appointment request is not confirmed until our team contacts you. Specialist and department timings may differ from OPD hours.</p>
           <h2>Accuracy</h2>
           <p>We work to keep information current, but it may change. Please confirm details with the clinic before visiting.</p>
           <div className="notice">Final wording to be reviewed by the clinic and its legal adviser before publication.</div>

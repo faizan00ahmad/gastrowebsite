@@ -11,7 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/specialists/",
     "/departments/",
     "/procedures/",
-    "/patient-guides/",
+    "/patient-resources/",
+    "/careers/",
     "/blog/",
     "/contact/",
   ];
