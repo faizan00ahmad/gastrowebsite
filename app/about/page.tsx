@@ -32,7 +32,7 @@ export default function AboutPage() {
       />
 
       {/* 1. About GPMC */}
-      <Section>
+      <Section id="overview">
         <div className="split">
           <div className="media-panel">
             <SmartImage src="/images/facility.jpg" alt="" fallback="none" />
@@ -63,7 +63,7 @@ export default function AboutPage() {
       </Section>
 
       {/* 2–3. Vision and mission */}
-      <Section className="section--alt">
+      <Section className="section--alt" id="mission">
         <div className="grid grid--2">
           <article className="statement">
             <span className="eyebrow">Our Vision</span>
@@ -116,7 +116,7 @@ export default function AboutPage() {
       </Section>
 
       {/* 6. Facilities & care environment */}
-      <Section>
+      <Section id="facilities">
         <SectionHeading
           eyebrow="Facilities"
           title="Facilities & Care Environment"

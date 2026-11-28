@@ -39,7 +39,7 @@ export function SmartImage({ src, alt, eager, fallback = "logo" }: SmartImagePro
     );
   }
 
-  return (
+  const img = (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       ref={ref}
@@ -48,6 +48,17 @@ export function SmartImage({ src, alt, eager, fallback = "logo" }: SmartImagePro
       alt={alt}
       onError={() => setFailed(true)}
       loading={eager ? "eager" : "lazy"}
+      decoding="async"
     />
+  );
+
+  // JPGs get a WebP twin from scripts/optimize-images.mjs (Roadmap §12); the JPG stays as fallback.
+  const webp = src && /^\/images\/.+\.jpe?g$/i.test(src) ? src.replace(/\.jpe?g$/i, ".webp") : null;
+  if (!webp) return img;
+  return (
+    <picture className="smart-picture">
+      <source srcSet={webp} type="image/webp" />
+      {img}
+    </picture>
   );
 }

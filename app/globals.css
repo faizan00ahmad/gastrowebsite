@@ -1464,9 +1464,7 @@ html { scroll-padding-top: 96px; }
   .nav-links { display: flex; }
   .header-cta { margin-left: 8px; }
   .menu-toggle { display: none; }
-  .brand__text { display: none; }
 }
-@media (min-width: 1440px) { .brand__text { display: flex; } }
 @media (max-width: 1179px) {
   .menu-toggle { display: grid; }
   .nav-links { display: none; }
@@ -1699,3 +1697,104 @@ fieldset.field legend { padding: 0; margin-bottom: 7px; font-size: 0.88rem; font
 .back-to-top:hover { color: #fff; }
 @media (min-width: 760px) { .footer-bottom__inner { padding-right: 150px; } }
 .icon-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* ---------- Header dropdowns (Roadmap §2 sub-menus) ---------- */
+.nav-drop { position: relative; display: flex; align-items: center; }
+.nav-drop > a { gap: 3px; }
+.nav-drop > a svg { opacity: 0.6; transition: transform 0.2s var(--ease); }
+.nav-drop:hover > a svg, .nav-drop:focus-within > a svg { transform: rotate(180deg); }
+.nav-drop__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 60;
+  min-width: 230px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(20, 20, 20, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease), visibility 0.18s;
+}
+.nav-drop:hover .nav-drop__menu,
+.nav-drop:focus-within .nav-drop__menu { opacity: 1; visibility: visible; transform: none; }
+.nav-links .nav-drop__menu a {
+  display: block;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.nav-links .nav-drop__menu a:hover,
+.nav-links .nav-drop__menu a:focus-visible { background: var(--brand-50, #f6f2f2); color: var(--maroon); }
+
+.mobile-group { border-bottom: 1px solid var(--line); }
+.mobile-group__row { display: flex; align-items: center; }
+.mobile-panel .mobile-group__row a { flex: 1; border-bottom: 0; }
+.mobile-group__toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.mobile-group__toggle svg { transition: transform 0.2s var(--ease); }
+.mobile-group__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.mobile-group__list { list-style: none; margin: 0 0 8px; padding: 0 0 0 14px; }
+.mobile-panel .mobile-group__list a { padding: 10px 4px; border-bottom: 0; font-size: 0.95rem; color: var(--muted); }
+
+/* <picture> wrapper must not change layout around SmartImage */
+.smart-picture { display: contents; }
+
+/* ---------- Desktop header: two rows (Roadmap §2) ----------
+   Row 1: large logo + full name, Book Appointment on the right.
+   Row 2: the nine menu items spread evenly across the full width. */
+.brand { flex-shrink: 0; }
+.brand__text { white-space: nowrap; }
+.nav-links a, .nav-drop > a { white-space: nowrap; }
+.nav-drop > a svg { width: 12px; height: 12px; }
+
+@media (min-width: 1180px) {
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "brand . cta" "nav nav nav";
+    align-items: center;
+    column-gap: 24px;
+    row-gap: 0;
+    min-height: 0;
+  }
+  .brand { grid-area: brand; gap: 14px; padding: 12px 0; }
+  .brand__logo { width: 76px; height: 76px; }
+  .brand__text { display: flex; flex-direction: column; justify-content: center; gap: 2px; line-height: 1.1; }
+  .brand__name { font-size: 1.6rem; letter-spacing: 0.02em; }
+  .brand__sub { font-size: 0.95rem; letter-spacing: 0.04em; }
+  .header-cta { grid-area: cta; margin-left: 0; }
+
+  .nav-links {
+    grid-area: nav;
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .nav-links > a, .nav-drop > a { padding: 14px 6px; font-size: 14.5px; border-bottom-width: 2px; }
+  .nav-links > a:first-child { padding-left: 0; }
+  .nav-links > a:last-child { padding-right: 0; }
+
+  html { scroll-padding-top: 130px; }
+  .site-header--compact .brand { padding: 6px 0; }
+  .site-header--compact .brand__logo { width: 52px; height: 52px; }
+  .site-header--compact .brand__name { font-size: 1.3rem; }
+  .site-header--compact .brand__sub { font-size: 0.85rem; }
+  .site-header--compact .nav-links > a, .site-header--compact .nav-drop > a { padding-top: 10px; padding-bottom: 10px; }
+}

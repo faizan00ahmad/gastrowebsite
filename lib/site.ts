@@ -6,10 +6,13 @@
  * Details that are not confirmed are left empty on purpose: the UI hides
  * them instead of showing a guess. Fill them in to make them appear.
  */
+import { departments, procedures } from "./content";
 
 export interface NavItem {
   label: string;
   href: string;
+  /** Optional dropdown entries (Roadmap §2 sub-menus). */
+  children?: { label: string; href: string }[];
 }
 
 export type SocialName = "Google" | "Facebook" | "Instagram" | "LinkedIn" | "YouTube" | "TikTok" | "X";
@@ -103,11 +106,39 @@ export const directionsUrl =
 /** Final nine-item menu, in the approved order (Roadmap §2). */
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "About GPMC", href: "/about/" },
+  {
+    label: "About GPMC",
+    href: "/about/",
+    children: [
+      { label: "Overview", href: "/about/#overview" },
+      { label: "Mission & Vision", href: "/about/#mission" },
+      { label: "Leadership", href: "/about/#leadership" },
+      { label: "Facilities", href: "/about/#facilities" },
+      { label: "Quality & Patient Safety", href: "/about/#quality" },
+    ],
+  },
   { label: "Specialists", href: "/specialists/" },
-  { label: "Departments", href: "/departments/" },
-  { label: "Procedures", href: "/procedures/" },
-  { label: "Patient Resources", href: "/patient-resources/" },
+  {
+    label: "Departments",
+    href: "/departments/",
+    children: departments.map((d) => ({ label: d.title, href: `/departments/${d.slug}/` })),
+  },
+  {
+    label: "Procedures",
+    href: "/procedures/",
+    children: procedures.map((p) => ({ label: p.title, href: `/procedures/${p.slug}/` })),
+  },
+  {
+    label: "Patient Resources",
+    href: "/patient-resources/",
+    children: [
+      { label: "Procedure Preparation", href: "/patient-resources/#preparation" },
+      { label: "Admission & Discharge", href: "/patient-resources/#admission" },
+      { label: "Patient Rights", href: "/patient-resources/#rights" },
+      { label: "Reports & Results", href: "/patient-resources/#reports" },
+      { label: "FAQs", href: "/patient-resources/#faqs" },
+    ],
+  },
   { label: "Health Blog", href: "/blog/" },
   { label: "Careers", href: "/careers/" },
   { label: "Contact & Appointment", href: "/contact/" },

@@ -42,7 +42,7 @@ export default function PrivacyPage() {
             used for emergencies.
           </p>
           <h2>Cookies and analytics</h2>
-          <p>This site does not set its own tracking cookies. The embedded Google Map is loaded from Google and follow their own privacy policies.</p>
+          <p>This site does not set its own tracking cookies. The embedded Google Map is loaded from Google, which follows its own privacy policies.</p>
           <h2>Contact</h2>
           <p>
             For privacy questions, contact {site.name} on{" "}

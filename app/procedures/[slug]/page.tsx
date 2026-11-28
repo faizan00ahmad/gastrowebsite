@@ -110,6 +110,12 @@ export default async function ProcedurePage({ params }: Props) {
               </p>
             </section>
 
+            <div className="notice">
+              <strong>Your safety during this procedure.</strong> Identity checks, informed consent, medication review
+              and disinfection of endoscopes between patients are part of GPMC&apos;s patient-safety practices.{" "}
+              <Link href="/about/#quality">Read about Quality &amp; Patient Safety</Link>.
+            </div>
+
             <footer className="review-meta">
               <p>
                 <strong>Last updated:</strong> {updated}
@@ -146,6 +152,14 @@ export default async function ProcedurePage({ params }: Props) {
               title="Our Procedures"
               current={current}
               links={procedures.map((p) => ({ label: p.title, href: `/procedures/${p.slug}/` }))}
+            />
+            <AsideLinks
+              title="Before & after your visit"
+              links={[
+                { label: "Preparation guides", href: "/patient-resources/#preparation" },
+                { label: "Quality & Patient Safety", href: "/about/#quality" },
+                { label: "Patient rights", href: "/patient-resources/#rights" },
+              ]}
             />
           </aside>
         </div>

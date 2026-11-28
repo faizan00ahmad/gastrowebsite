@@ -108,6 +108,8 @@ export function SiteFooter() {
             <Link href="/privacy-policy/">Privacy Policy</Link>
             <span aria-hidden="true">|</span>
             <Link href="/terms-and-conditions/">Terms &amp; Conditions</Link>
+            <span aria-hidden="true">|</span>
+            <Link href="/accessibility/">Accessibility</Link>
           </nav>
           {social.length > 0 && (
             <ul className="footer-social" aria-label="GPMC on social media">

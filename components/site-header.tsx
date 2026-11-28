@@ -20,8 +20,12 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setExpanded(null);
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -67,11 +71,27 @@ export function SiteHeader() {
           </Link>
 
           <nav aria-label="Primary" className="nav-links">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.children ? (
+                <div key={item.href} className="nav-drop">
+                  <Link href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
+                    {item.label}
+                    <Icon name="chevron" size={14} />
+                  </Link>
+                  <ul className="nav-drop__menu" aria-label={`${item.label} pages`}>
+                    {item.children.map((c) => (
+                      <li key={c.href}>
+                        <Link href={c.href}>{c.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
+                  {item.label}
+                </Link>
+              ),
+            )}
           </nav>
 
           <Link href={appointmentHref()} className="btn btn--primary header-cta">
@@ -92,12 +112,43 @@ export function SiteHeader() {
 
         {open && (
           <nav id="mobile-menu" aria-label="Mobile" className="container mobile-panel">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
-                {item.label}
-                <Icon name="arrow" size={16} />
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.children ? (
+                <div key={item.href} className="mobile-group">
+                  <div className="mobile-group__row">
+                    <Link href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
+                      {item.label}
+                    </Link>
+                    <button
+                      type="button"
+                      className="mobile-group__toggle"
+                      aria-expanded={expanded === item.href}
+                      aria-controls={`sub-${item.label.replace(/\W+/g, "-")}`}
+                      aria-label={`Show ${item.label} pages`}
+                      onClick={() => setExpanded((v) => (v === item.href ? null : item.href))}
+                    >
+                      <Icon name="chevron" size={18} />
+                    </button>
+                  </div>
+                  {expanded === item.href && (
+                    <ul id={`sub-${item.label.replace(/\W+/g, "-")}`} className="mobile-group__list">
+                      {item.children.map((c) => (
+                        <li key={c.href}>
+                          <Link href={c.href} onClick={() => setOpen(false)}>
+                            {c.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : (
+                <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>
+                  {item.label}
+                  <Icon name="arrow" size={16} />
+                </Link>
+              ),
+            )}
           </nav>
         )}
       </header>

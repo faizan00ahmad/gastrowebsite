@@ -96,6 +96,13 @@ export interface Specialist {
   schedule?: string;
   /** Path of an approved photograph. Without one, the profile shows the GPMC logo. */
   photo?: string;
+  /**
+   * Procedure slugs this doctor personally performs (Roadmap §8). Fill only once the
+   * doctor confirms; until then the profile lists GPMC's procedures without attributing them.
+   */
+  performs?: string[];
+  /** Show GPMC's procedure list on this profile (gastro / endoscopy doctors). */
+  showProcedures?: boolean;
 }
 
 export interface Article {
@@ -603,6 +610,8 @@ export const specialists: Specialist[] = [
       { role: "Consultant Gastroenterologist", place: "Mukhtar A Sheikh Hospital Multan", external: true },
     ],
     interests: ["Gastroenterology", "Hepatology (liver disease)", "Interventional endoscopy"],
+    showProcedures: true,
+    // performs: ["upper-gi-endoscopy", "colonoscopy", "ercp"], // uncomment once Dr. Umair confirms
     bio: [
       "Dr. Umair Khan Sherwani is a gastroenterologist, hepatologist and interventional endoscopist, and the Chief Executive Officer of Gastro Plus Medical Complex Multan.",
       "He graduated MBBS from King Edward Medical University (KEMU), Lahore, and holds the FCPS in Gastroenterology. He is an Assistant Professor, Head of the Gastroenterology Department at Ibn e Sina Hospital Multan and Consultant Gastroenterologist at Mukhtar A Sheikh Hospital Multan.",

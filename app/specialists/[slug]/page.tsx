@@ -4,7 +4,7 @@ import { PageHero, Section, BookingButtons } from "@/components/primitives";
 import { JsonLd } from "@/components/json-ld";
 import { SmartImage } from "@/components/smart-image";
 import { buildMetadata, physicianJsonLd } from "@/lib/seo";
-import { findDepartment, findSpecialist, specialists } from "@/lib/content";
+import { findDepartment, findSpecialist, procedures, specialists } from "@/lib/content";
 import { opdHoursLabel } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -101,6 +101,54 @@ export default async function SpecialistPage({ params }: Props) {
                     <li key={i}>{i}</li>
                   ))}
                 </ul>
+              </section>
+            )}
+
+            {(doc.showProcedures || doc.performs?.length) && (
+              <section>
+                <h2 className="doc-subhead">Procedures at GPMC</h2>
+                {doc.performs?.length ? (
+                  <>
+                    <p>Procedures performed by {doc.name}:</p>
+                    <ul className="card__points">
+                      {procedures
+                        .filter((p) => doc.performs!.includes(p.slug))
+                        .map((p) => (
+                          <li key={p.slug}>
+                            <Link href={`/procedures/${p.slug}/`}>{p.title}</Link>
+                          </li>
+                        ))}
+                    </ul>
+                    {procedures.some((p) => !doc.performs!.includes(p.slug)) && (
+                      <>
+                        <p>Also available at GPMC with other members of the team:</p>
+                        <ul className="card__points">
+                          {procedures
+                            .filter((p) => !doc.performs!.includes(p.slug))
+                            .map((p) => (
+                              <li key={p.slug}>
+                                <Link href={`/procedures/${p.slug}/`}>{p.title}</Link>
+                              </li>
+                            ))}
+                        </ul>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <ul className="card__points">
+                      {procedures.map((p) => (
+                        <li key={p.slug}>
+                          <Link href={`/procedures/${p.slug}/`}>{p.title}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="field-hint">
+                      These procedures are available at GPMC. Please ask our team which doctor will perform your
+                      procedure.
+                    </p>
+                  </>
+                )}
               </section>
             )}
 

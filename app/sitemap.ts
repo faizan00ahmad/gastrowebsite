@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...seoLandings.map((p) => `/${p.slug}/`),
   ];
 
-  const legal = ["/privacy-policy/", "/terms-and-conditions/"];
+  const legal = ["/privacy-policy/", "/terms-and-conditions/", "/accessibility/"];
 
   const now = new Date();
   return [...staticPaths, ...dynamicPaths, ...legal].map((path) => ({

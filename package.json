@@ -4,7 +4,9 @@
   "private": true,
   "description": "Static website for Gastro Plus Medical Complex Multan",
   "scripts": {
+    "predev": "node scripts/optimize-images.mjs",
     "dev": "next dev -p 3030",
+    "prebuild": "node scripts/optimize-images.mjs",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
